@@ -1,0 +1,64 @@
+Date: 6/2
+Duration: 11-15
+Group members: Henrik, Jakob, Jesper
+
+Goals: 	
+	Get bluetooth to work for all machines
+	Do this week's exercises
+
+Results:
+	Getting bluetooth to work in linux mint:
+		install package libbluetooth-dev
+		connect using "bluez-simple-agent hci# [address]
+		nxjbrowse now works
+
+	Exercise 1 (with floodlight):
+		red		60
+		blue 	44
+		grey	54
+		dark green 40
+		light green 51
+		white	63
+		black	35
+		(first three results taken in one lighting condition on semi-glossy paper, last four in another on matte felt)
+		It's interesting to note that the color red is registered almost as bright as white, which is due to the color of the floodlight.
+		By measuring black and white you get the upper and lower bounds on light levels, and finding the average of these two would yield a threshold value.
+
+	Exercise 2 (without floodlight):
+		(this time every measurement have the same lighting conditions, although still different surface types)
+		red 	30
+		blue	29
+		grey	29
+		white	32
+		black	22
+		l.green	30
+		d.green	29
+
+	Exercise 3 (with floodlight enabled):
+		10ms: the robot follows the line with ease.
+		100ms: still follows the line, although the robot has gotten tipsy.
+		500ms: the robot zigzags so much it crashes into a wall, now drunk.
+		1000ms: the robot can barely stand up, completely wasted.
+		
+		As the robot reacts slower, it cannot update in time to follow the line, and therefore it starts zigzagging
+
+	Exercise 4:
+		10ms: it oscillates roughly 3 times per second, 3Hz
+		100ms: about 2Hz
+		500ms: 0.5Hz
+		1000ms: 0.2Hz
+		Graphs made using GNUplot.
+		
+		As expected, making the robot react slower makes the light level oscillate slower as well.
+		
+	Exercise 5:
+
+		Using variables:
+			free memory slowly ticks down from 56k to 40k, then jumps back up to 56k
+		Using strings directly:
+			free memory quickly ticks down from 56k to 40k, then jumps back up to 56k
+		
+		With variable references, a reference is used in the method call every 10ms, whereas using strings directly handles each method call as a different input, and has to save all of them. This eats memory much faster.
+
+Conclusion:
+	All PCs now have bluetooth connectivity with the NXT, and all exercises have been solved.
