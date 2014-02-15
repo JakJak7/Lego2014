@@ -17,3 +17,6 @@ plot "../sample/Exercise5_v2.txt" using 1:2 with lines
 
 set output "Exercise4_tweaked.png"
 plot "../sample/Exercise4_tweaked.txt" using 1:2 with lines
+
+set output "Exercise6_nqc.png"
+plot "../sample/Exercise6_nqc.txt" using 1:2 with lines
