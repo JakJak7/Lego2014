@@ -11,7 +11,7 @@ import lejos.nxt.*;
  * @author  Ole Caprani
  * @version 24.08.08
  */
-public class Tracker
+public class TrackerLogging
 {
   public static void main (String[] aArg)
   throws Exception
@@ -21,12 +21,15 @@ public class Tracker
      int distance,
          desiredDistance = 35, // cm
          power, 
-         minPower = 50;
-     float error, gain = 1.0f;
+         minPower = 60;
+     float error, gain = 0.5f;
 	  
      LCD.drawString("Distance: ", 0, 1);
      LCD.drawString("Power:    ", 0, 2);
-	   
+
+     DataLogger dl = new DataLogger("Sample.txt");
+     dl.start();
+
      while (! Button.ESCAPE.isDown())
      {		   
          distance = us.getDistance();
@@ -53,10 +56,12 @@ public class Tracker
 		 }
          else
              Car.forward(100, 100);
-		 
+		
+	 dl.writeSample(distance);
          Thread.sleep(300);
      }
 	 
+     dl.close();
      Car.stop();
      LCD.clear();
      LCD.drawString("Program stopped", 0, 0);
