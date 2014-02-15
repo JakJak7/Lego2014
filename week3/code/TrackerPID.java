@@ -21,12 +21,12 @@ public class TrackerPID
      int distance,
          desiredDistance = 35, // cm
          power, 
-         minPower = 60,
-	 dt = 300; //ms
-     float error = 0.0f, prevError = 0.0f, integral = 0.0f, derivative = 0.0f,
-	 Kp = 0.5f,
-	 Ki = 0.5f,
-	 Kd = 0.5f;
+	 previousPower,
+         minPower = 50,
+	 dt = 30; //ms
+     float error = 0.0f, prevError = 0.0f, derivative = 0.0f,
+	 Kp = 10.0f,
+	 Kd = 10.0f;
 	  
      LCD.drawString("Distance: ", 0, 1);
      LCD.drawString("Power:    ", 0, 2);
@@ -41,9 +41,8 @@ public class TrackerPID
          if ( distance != noObject ) 
          {
              error = distance - desiredDistance;
-	     integral = integral + error/dt;
 	     derivative = (error - prevError)/dt;
-             power = (int)(Kp * error) + (int)(Ki * integral) + (int)(Kd * derivative);
+             power = (int)(Kp * error) + (int)(Kd * derivative);
              if ( error > 0 )
              { 
                  power = Math.min(minPower + power,100);
@@ -59,11 +58,12 @@ public class TrackerPID
              }
              LCD.drawInt(distance,4,10,1);
              LCD.drawInt(power, 4,10,2);
-		 }
+	 }
          else
              Car.forward(100, 100);
 	 dl.writeSample(distance);
 	 prevError = error;
+	 //previousPower = power;
          Thread.sleep(dt);
      }
 	 

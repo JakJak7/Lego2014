@@ -65,7 +65,7 @@ public class DataLogger
             }
             
             // Separate items with comma
-            fos.write((byte)(','));
+            fos.write((byte)('\t'));
             
             for(int i=0; i<sampleString.length(); i++)
             {
