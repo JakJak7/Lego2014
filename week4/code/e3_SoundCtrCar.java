@@ -6,7 +6,7 @@ import lejos.nxt.*;
  * @author  Ole Caprani
  * @version 23.08.07
  */
-public class SoundCtrCar 
+public class e3_SoundCtrCar 
 {
     private static int soundThreshold = 90;
     private static SoundSensor sound = new SoundSensor(SensorPort.S1);
