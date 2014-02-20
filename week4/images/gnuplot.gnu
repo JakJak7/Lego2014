@@ -17,8 +17,7 @@ set output "w4.ex1.klap.png"
 plot "../samples/w4.ex1.klap.s" using 1:2 w l
 
 set output "w4.klaptest.png"
-set xrange [6000:6500] 
-plot "../samples/w4.klaptest.s" using 1:2 w l
+plot "../samples/w4.ex1.klaptest.s" using 1:2 w l
 
 set output "w4.ex1.hej.png"
 set xrange [0:17000] 
