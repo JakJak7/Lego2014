@@ -6,30 +6,16 @@ import lejos.nxt.*;
  * @author  Ole Caprani
  * @version 23.08.07
  */
-public class e4_SoundCtrCar 
+public class e5_SoundCtrCar 
 {
-    private static int soundThreshold = 90;
+
     private static SoundSensor sound = new SoundSensor(SensorPort.S1);
 	
-    private static  void waitForLoudSound() throws Exception
-    {
-        int soundLevel;
-
-        Thread.sleep(500);
-        do
-	    {
-		soundLevel = sound.readValue();
-		LCD.drawInt(soundLevel,4,10,0); 
-	    }
-        while ( soundLevel < soundThreshold );
-    }
-
     public static void main(String [] args) throws Exception
     {
 	Button.ESCAPE.addButtonListener(new ButtonListener() {
 		public void buttonPressed(Button b) {
 		    LCD.drawString("ENTER pressed", 0, 0);
-		    Car.stop();
 		    System.exit(1);
 		}
 
@@ -37,29 +23,26 @@ public class e4_SoundCtrCar
 		    LCD.clear();
 		}
 	    });
-        LCD.drawString("dB level: ",0,0);
-        LCD.refresh();
 	   	   
-        while (! Button.ESCAPE.isDown()) {
-		waitForLoudSound();		    			   
-		LCD.drawString("Forward ",0,1);
-		Car.forward(100, 100);
-		    
-		waitForLoudSound();		    			   
-		LCD.drawString("Right   ",0,1);
-		Car.forward(100, 0);
-		    
-		waitForLoudSound();		    			   
-		LCD.drawString("Left    ",0,1);
-		Car.forward(0, 100);
-		    
-		waitForLoudSound();		    			   
-		LCD.drawString("Stop    ",0,1); 
-		Car.stop();
+        int soundLevel;
+	int low = 10;
+	int high = 70;
+        while (true) {
+	    soundLevel = sound.readValue();
+	    LCD.drawInt(soundLevel,4,10,0); 
+	    if (soundLevel < low) {
+		Thread.sleep(25);
+		soundLevel = sound.readValue();
+		if (soundLevel > high) {
+		    Thread.sleep(250);
+		    soundLevel = sound.readValue();
+		    if (soundLevel < low) {
+			LCD.drawString("KLAP DETECTED!!", 0, 0);
+			Thread.sleep(1000);
+			LCD.clear();
+		    }
+		}
 	    }
-	Car.stop();
-	LCD.clear();
-	LCD.drawString("Program stopped", 0, 0);
-	Thread.sleep(2000); 
+	}
     }
 }
