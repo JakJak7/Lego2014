@@ -16,6 +16,14 @@ plot "../samples/w4.ex1.mobil.s" using 1:2 w l title "With mobile"
 set output "w4.ex1.klap.png"
 plot "../samples/w4.ex1.klap.s" using 1:2 w l title "Klap"
 
+set output "w6.twomic.text.png"
+plot "../samples/w6.m1.s" using 1:2 w l title "Test med to mic", \
+"../samples/w6.m2.s" using 1:2 w l title "Test med to mic" 
+
+set output "w6.twomic.text.justeret.png"
+plot "../samples/w6.2.m1.s" using 1:2 w l title "Test med to mic (justeret)", \
+"../samples/w6.2.m2.s" using 1:2 w l title "Test med to mic" 
+
 set output "w4.klaptest.png"
 set xrange [0:500] 
 plot "../samples/w4.klaptest.s" using ($1-6000):2 w lp title "Sample of one clap"
