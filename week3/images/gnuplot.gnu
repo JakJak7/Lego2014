@@ -44,6 +44,7 @@ set xtics 1
 set output "Exercise6_nqc.png"
 f(x) = mean
 fit f(x) '../sample/Exercise6_nqc.txt' u 1:2 via mean
+
 stddev_y = sqrt(FIT_WSSR / (FIT_NDF + 1 ))
 set xrange [0:10]
 set label 1 gprintf("Mean = %g", mean) at 4, mean+5
