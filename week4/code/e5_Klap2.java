@@ -6,7 +6,7 @@ import lejos.nxt.*;
  * @author  Ole Caprani
  * @version 23.08.07
  */
-public class e5_Klap {
+public class e5_Klap2 {
 
     private static SoundSensor sound = new SoundSensor(SensorPort.S1);
 	
@@ -24,19 +24,19 @@ public class e5_Klap {
 	    });
 	   	   
         int soundLevel;
-	int low = 30;
+	int low = 10;
 	int high = 70;
         while (true) {
 	    soundLevel = sound.readValue();
 	    LCD.drawInt(soundLevel,4,10,0); 
-	    if (soundLevel < low) {
-		Thread.sleep(30);
+	    if (soundLevel > low && soundLevel < high) {
+		Thread.sleep(25);
 		soundLevel = sound.readValue();
 		if (soundLevel > high) {
-		    Thread.sleep(100-30);
+		    Thread.sleep(150);
 		    soundLevel = sound.readValue();
-		    if (soundLevel > low && soundLevel <40) {
-			Thread.sleep(150);
+		    if (soundLevel > low && soundLevel < high) {
+			Thread.sleep(100);
 			soundLevel = sound.readValue();
 			if (soundLevel < low) {
 			    LCD.drawString("KLAP DETECTED!!", 0, 0);
