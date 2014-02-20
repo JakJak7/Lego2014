@@ -6,8 +6,7 @@ import lejos.nxt.*;
  * @author  Ole Caprani
  * @version 23.08.07
  */
-public class e5_SoundCtrCar 
-{
+public class e5_Klap {
 
     private static SoundSensor sound = new SoundSensor(SensorPort.S1);
 	
