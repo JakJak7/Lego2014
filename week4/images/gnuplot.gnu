@@ -16,7 +16,11 @@ plot "../samples/w4.ex1.mobil.s" using 1:2 w l
 set output "w4.ex1.klap.png"
 plot "../samples/w4.ex1.klap.s" using 1:2 w l
 
+set output "w4.ex1.klaptest.png"
+plot "../samples/w4.ex1.klaptest.s" using 1:2 w l
+
 set output "w4.ex1.hej.png"
 set xrange [0:17000] 
 plot "../samples/w4.ex1.hej.s" using 1:2 w l
+
 
