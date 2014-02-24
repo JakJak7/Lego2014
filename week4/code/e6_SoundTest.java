@@ -1,10 +1,8 @@
 import lejos.nxt.*;
 /**
- * The locomotions of a  LEGO 9797 car is controlled by
- * sound detected through a microphone on port 1. 
- * 
- * @author  Ole Caprani
- * @version 23.08.07
+   Læser lyd input fra port 1 og port 2 (to sensors) .. og gemmer 
+   værdierne i datalogger, så det er til at lave en graf over
+   værdierne og derefter anslå hvor meget forskelligt de måler.
  */
 public class e6_SoundTest 
 {
@@ -16,8 +14,7 @@ public class e6_SoundTest
     {
 	Button.ESCAPE.addButtonListener(new ButtonListener() {
 		public void buttonPressed(Button b) {
-		    LCD.drawString("ENTER pressed", 0, 0);
-		    Car.stop();
+		    LCD.drawString("ESCAPE pressed", 0, 0);
 		    System.exit(1);
 		}
 		
@@ -38,6 +35,7 @@ public class e6_SoundTest
 	    LCD.drawInt(soundLevel2,4,10,1); 
 	    dl1.writeSample(soundLevel1);
 	    dl2.writeSample(soundLevel2);
+	    Thread.sleep(10);
 	}
 	dl1.close();
 	dl2.close();
