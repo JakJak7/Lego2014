@@ -28,11 +28,16 @@ public class e6_SoundCtrCar
         LCD.refresh();
 	int soundLevel1,soundLevel2;
         while (! Button.ESCAPE.isDown()) {
-	    soundLevel1 = sound1.readValue();
-	    soundLevel2 = sound2.readValue();
+	    soundLevel1 = (sound1.readValue()-3)*3;
+	    soundLevel2 = (sound2.readValue()-3)*3;
 	    LCD.drawInt(soundLevel1,4,10,0); 
-	    LCD.drawInt(soundLevel2,4,10,1); 
-            Car.forward(soundLevel1*3, soundLevel2*3);
+	    LCD.drawInt(soundLevel2,4,10,1);
+	    /*if (soundLevel1 < 16)
+		soundLevel1 = 0;
+	    if (soundLevel2 < 16)
+		soundLevel2 = 0;
+	    */
+	    Car.forward(soundLevel1, soundLevel2);
        }
        Car.stop();
        LCD.clear();
