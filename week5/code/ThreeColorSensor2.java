@@ -47,7 +47,7 @@ public class ThreeColorSensor2 {
 	greenWhiteThreshold = green + 2;
     }
     public boolean green() {
-	return (light() <= greenLightValue+2 && light() >= greenLightValue-2);
+	return (light() <= greenWhiteThreshold && light() >= blackGreenThreshold);
     }
 
     public boolean black() {
