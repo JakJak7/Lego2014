@@ -1,40 +1,41 @@
 import lejos.nxt.*;
 
-public class e4_LineFolloCal
+public class e5_LineFolloCal
 {
+    public static void controlMotor(MotorPort m, int value) {
+	if      (value > 0 ) m.controlMotor(value,1);
+	else if (value < 0 ) m.controlMotor(-1*value,2);
+	else if (value == 0) m.controlMotor(value,3);
+    }
     public static void main (String[] aArg) throws Exception {
-	final int power = 80;
-	
-	Button.ESCAPE.addButtonListener(new ButtonListener() {
-		public void buttonPressed(Button b) {
-		    LCD.drawString("ENTER pressed", 0, 0);
-		    System.exit(1);
-		}
+	LightSensor sensor = new LightSensor(SensorPort.S1);
 
-		public void buttonReleased(Button b) {
-		    LCD.clear();
-		}
-	    });
-
-	ThreeColorSensor sensor = new ThreeColorSensor(SensorPort.S1);
-	 
-	sensor.calibrate();
+	float Kp = 250, Ki = 5, Kd = 1500;
+	int offset = 50,
+	    Tp = 60,
+	    integral = 0,
+	    lastError = 0,
+	    derivative = 0;
+       
 
 	LCD.clear();
 	LCD.drawString("Light: ", 0, 2); 
 
 	while (! Button.ESCAPE.isDown()) {
-	    LCD.drawInt(sensor.light(),4,10,2);
+	    LCD.drawInt(sensor.readValue(),4,10,2);
 	    LCD.refresh();
-	     
-	    if (sensor.black() || sensor.white())
-		Car.forward(power, power);
-	    else
-		Car.stop();
+	    
+	    int LightValue = sensor.readValue();
+	    int error = LightValue - offset;
+	    integral = integral + error;
+	    derivative = error - lastError;
+	    int Turn = (int) (Kp*error + Ki*integral + Kd*derivative)/100;
+	    controlMotor(MotorPort.B, Tp - Turn);
+	    controlMotor(MotorPort.C, Tp + Turn+2); //den trækker ikke ligeså godt
+	    lastError = error;
 	    Thread.sleep(10);
 	}
 
-	Car.stop();
 	LCD.clear();
 	LCD.drawString("Program stopped", 0, 0);
 	LCD.refresh();
