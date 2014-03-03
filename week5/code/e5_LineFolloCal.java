@@ -10,7 +10,9 @@ public class e5_LineFolloCal
     public static void main (String[] aArg) throws Exception {
 	LightSensor sensor = new LightSensor(SensorPort.S1);
 
-	float Kp = 250, Ki = 5, Kd = 1500;
+	float Kc = 250, Pc = 1.2f, dT = 0.020f;
+	float Kp = 250*0.6f;
+	float Ki = 2*Kp*dT/Pc, Kd = Kp*Pc/(8*dT);
 	int offset = 50,
 	    Tp = 60,
 	    integral = 0,
@@ -31,9 +33,9 @@ public class e5_LineFolloCal
 	    derivative = error - lastError;
 	    int Turn = (int) (Kp*error + Ki*integral + Kd*derivative)/100;
 	    controlMotor(MotorPort.B, Tp - Turn);
-	    controlMotor(MotorPort.C, Tp + Turn+2); //den trækker ikke ligeså godt
+	    controlMotor(MotorPort.C, Tp + Turn);
 	    lastError = error;
-	    Thread.sleep(10);
+	    Thread.sleep(20);
 	}
 
 	LCD.clear();
