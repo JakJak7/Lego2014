@@ -1,4 +1,5 @@
 import lejos.nxt.*;
+import lejos.robotics.Color;
 
 /**
  * A controller for a self-balancing Lego robot with a light sensor
@@ -12,8 +13,7 @@ import lejos.nxt.*;
  */
 
 
-public class Sejway 
-{
+public class e3_Sejway_Log {
 
     // PID constants
     final int KP = 28;
@@ -26,32 +26,47 @@ public class Sejway
     int prev_error;
     float int_error;
 	
-    LightSensor ls;
-	
-    public Sejway() 
-    {
-        ls = new LightSensor(SensorPort.S2, true);
-    }
-	
-    public void getBalancePos() 
-    {
-        // Wait for user to balance and press orange button
-        while (!Button.ENTER.isDown())
-        {
-        // NXTway must be balanced.
-        offset = ls.readNormalizedValue();
-        LCD.clear();
-        LCD.drawInt(offset, 2, 4);
-        LCD.refresh();
-        }
-    }
-	
-    public void pidControl() 
-    {
-        while (!Button.ESCAPE.isDown()) 
-        {
-            int normVal = ls.readNormalizedValue();
+    //%LightSensor ls;
+    ColorSensor cs;	
+    DataLogger dl1,dl2,dl3,dl4;
 
+    public e3_Sejway_Log() {
+        //%ls = new LightSensor(SensorPort.S2, true);
+        cs = new ColorSensor(SensorPort.S1);
+        cs.setFloodlight(Color.WHITE);
+	dl1 = new DataLogger("SampleR.txt");
+	dl2 = new DataLogger("SampleG.txt");
+	dl3 = new DataLogger("SampleB.txt");
+	dl4 = new DataLogger("SampleL.txt");
+    }
+	
+    public void getBalancePos() {
+        // Wait for user to balance and press orange button
+        while (!Button.ENTER.isDown()) {
+	    // NXTway must be balanced.
+	    //%offset = ls.readNormalizedValue();
+	    offset = cs.getNormalizedLightValue();
+	    LCD.clear();
+	    LCD.drawInt(offset, 2, 4);
+	    LCD.refresh();
+	}
+    }
+	
+    public void pidControl() throws Exception {
+	dl1.start();
+	dl2.start();
+	dl3.start();
+	dl4.start();
+
+        while (!Button.ESCAPE.isDown()) {
+            ColorSensor.Color rawVals = cs.getRawColor();
+	    dl1.writeSample(rawVals.getRed());
+	    dl2.writeSample(rawVals.getGreen());
+	    dl3.writeSample(rawVals.getBlue());
+      
+	    //%int normVal = ls.readNormalizedValue();
+	    int normVal = cs.getNormalizedLightValue();
+	    dl4.writeSample(normVal);
             // Proportional Error:
             int error = normVal - offset;
             // Adjust far and near light readings:
@@ -75,28 +90,25 @@ public class Sejway
             int power = Math.abs(pid_val);
             power = 55 + (power * 45) / 100; // NORMALIZE POWER
 
-
-            if (pid_val > 0) {
-                MotorPort.B.controlMotor(power, BasicMotorPort.FORWARD);
-                MotorPort.C.controlMotor(power, BasicMotorPort.FORWARD);
-            } else {
-                MotorPort.B.controlMotor(power, BasicMotorPort.BACKWARD);
-                MotorPort.C.controlMotor(power, BasicMotorPort.BACKWARD);
-            }
+	    Thread.sleep(50);
         }
     }
 	
     public void shutDown()
     {
+	dl1.close();
+	dl2.close();
+	dl3.close();
+	dl4.close();
+
         // Shut down light sensor, motors
-        Motor.B.flt();
-        Motor.C.flt();
-        ls.setFloodlight(false);
+        //Motor.B.flt();
+        //Motor.C.flt();
+        //%ls.setFloodlight(false);
     }
 	
-    public static void main(String[] args) 
-    {
-        Sejway sej = new Sejway();
+    public static void main(String[] args) throws Exception{
+        e3_Sejway_Log sej = new e3_Sejway_Log();
         sej.getBalancePos();
         sej.pidControl();
         sej.shutDown();
