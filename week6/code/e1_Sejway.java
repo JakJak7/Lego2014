@@ -1,5 +1,4 @@
 import lejos.nxt.*;
-import lejos.robotics.Color;
 
 /**
  * A controller for a self-balancing Lego robot with a light sensor
@@ -13,7 +12,8 @@ import lejos.robotics.Color;
  */
 
 
-public class e3_Sejway {
+public class e1_Sejway 
+{
 
     // PID constants
     final int KP = 28;
@@ -26,29 +26,31 @@ public class e3_Sejway {
     int prev_error;
     float int_error;
 	
-
-    ColorSensor cs;	
-
-    public e3_Sejway() {
-        cs = new ColorSensor(SensorPort.S1);
-        cs.setFloodlight(Color.WHITE);
+    LightSensor ls;
+	
+    public e1_Sejway() {
+        ls = new LightSensor(SensorPort.S2, true);
     }
 	
-    public void getBalancePos() {
+    public void getBalancePos() 
+    {
         // Wait for user to balance and press orange button
-        while (!Button.ENTER.isDown()) {
-	    // NXTway must be balanced.
-	    offset = cs.getNormalizedLightValue();
-	    LCD.clear();
-	    LCD.drawInt(offset, 2, 4);
-	    LCD.refresh();
-	}
+        while (!Button.ENTER.isDown())
+        {
+        // NXTway must be balanced.
+        offset = ls.readNormalizedValue();
+        LCD.clear();
+        LCD.drawInt(offset, 2, 4);
+        LCD.refresh();
+        }
     }
 	
-    public void pidControl() throws Exception {
+    public void pidControl() 
+    {
+        while (!Button.ESCAPE.isDown()) 
+        {
+            int normVal = ls.readNormalizedValue();
 
-        while (!Button.ESCAPE.isDown()) {
-	    int normVal = cs.getNormalizedLightValue();
             // Proportional Error:
             int error = normVal - offset;
             // Adjust far and near light readings:
@@ -73,15 +75,13 @@ public class e3_Sejway {
             power = 55 + (power * 45) / 100; // NORMALIZE POWER
 
 
-	    if (pid_val > 0) {
-		MotorPort.B.controlMotor(power, BasicMotorPort.FORWARD);
-		MotorPort.C.controlMotor(power, BasicMotorPort.FORWARD);
-	    } else {
-		MotorPort.B.controlMotor(power, BasicMotorPort.BACKWARD);
-		MotorPort.C.controlMotor(power, BasicMotorPort.BACKWARD);
-	    }
-	    
-	    
+            if (pid_val > 0) {
+                MotorPort.B.controlMotor(power, BasicMotorPort.FORWARD);
+                MotorPort.C.controlMotor(power, BasicMotorPort.FORWARD);
+            } else {
+                MotorPort.B.controlMotor(power, BasicMotorPort.BACKWARD);
+                MotorPort.C.controlMotor(power, BasicMotorPort.BACKWARD);
+            }
         }
     }
 	
@@ -90,11 +90,12 @@ public class e3_Sejway {
         // Shut down light sensor, motors
         Motor.B.flt();
         Motor.C.flt();
-        //%ls.setFloodlight(false);
+        ls.setFloodlight(false);
     }
 	
-    public static void main(String[] args) throws Exception{
-        e3_Sejway sej = new e3_Sejway();
+    public static void main(String[] args) 
+    {
+        e1_Sejway sej = new e1_Sejway();
         sej.getBalancePos();
         sej.pidControl();
         sej.shutDown();
