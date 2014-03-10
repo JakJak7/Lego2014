@@ -172,6 +172,8 @@ public class BTSejway implements ButtonListener
         // Shut down light sensor, motors
         Motor.B.flt();
         Motor.C.flt();
+	prev_error = 0;
+	int_error = 0.0f;
         //%ls.setFloodlight(false);
     }
     
