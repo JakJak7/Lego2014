@@ -10,7 +10,7 @@ public class Vehicle1 {
 	return value;
     }
 
-    private void mPower(int power) {
+    private void mPower(int power) {//-100 -> 100
 	int d1 = (power > 0)?1:2;
 	power = (power < 0)?-power:power;
         LCD.drawString("mPower: ",0,1);
