@@ -19,7 +19,7 @@ public class RobotFigure9_9 {
     	
     	//Escape escape = new Escape(car[0]);
     	Avoid avoid   = new Avoid(car[1]);
-    	Follow follow = new Follow(car[2]);
+    	//Follow follow = new Follow(car[2]);
     	Cruise cruise = new Cruise(car[3]);
     	
     	Arbiter arbiter = new Arbiter(car, cd);
@@ -31,8 +31,8 @@ public class RobotFigure9_9 {
         arbiter.start();
         avoid.setDaemon(true);
         avoid.start();
-        follow.setDaemon(true);
-        follow.start();
+        //follow.setDaemon(true);
+        //follow.start();
         cruise.setDaemon(true);
         cruise.start();
 	    	      

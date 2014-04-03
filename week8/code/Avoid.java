@@ -17,7 +17,7 @@ class Avoid extends Thread
 	
     public Avoid(SharedCar car)
     {
-       this.car = car;		    	
+       this.car = car;
     }
     
 	public void run() 
