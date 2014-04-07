@@ -9,7 +9,7 @@
 class Cruise extends Thread
 {
     private SharedCar car;
-    private int power = 70;
+    private int power = 100;
     
     public Cruise(SharedCar car)
     {
