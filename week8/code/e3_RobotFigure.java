@@ -14,8 +14,13 @@ public class e3_RobotFigure {
     	CarDriver cd = new CarDriver();
 
     	Escape escape = new Escape(car[0]);
+<<<<<<< HEAD
     	Avoid avoid   = new Avoid(car[1]);
     	//Follow follow = new Follow(car[2]);
+=======
+    	//Avoid avoid   = new Avoid(car[1]);
+    	Follow follow = new Follow(car[2]);
+>>>>>>> 112c21e4978c446770e8ae2398aa12deee7f71ff
     	Cruise cruise = new Cruise(car[3]);
 
     	Arbiter arbiter = new Arbiter(car, cd);
@@ -24,11 +29,19 @@ public class e3_RobotFigure {
         Button.waitForAnyPress();
 
         escape.setDaemon(true);
+<<<<<<< HEAD
 	escape.start();
         arbiter.setDaemon(true);
         arbiter.start();
         avoid.setDaemon(true);
         avoid.start();
+=======
+        escape.start();
+        arbiter.setDaemon(true);
+        arbiter.start();
+        //avoid.setDaemon(true);
+        //avoid.start();
+>>>>>>> 112c21e4978c446770e8ae2398aa12deee7f71ff
         //follow.setDaemon(true);
         //follow.start();
         cruise.setDaemon(true);
