@@ -14,7 +14,7 @@ public class e3_RobotFigure {
     	CarDriver cd = new CarDriver();
 
     	Escape escape = new Escape(car[0]);
-    	Avoid avoid   = new Avoid(car[1]);
+    	//Avoid avoid   = new Avoid(car[1]);
     	Follow follow = new Follow(car[2]);
     	Cruise cruise = new Cruise(car[3]);
 
@@ -27,10 +27,10 @@ public class e3_RobotFigure {
         escape.start();
         arbiter.setDaemon(true);
         arbiter.start();
-        avoid.setDaemon(true);
-        avoid.start();
-        follow.setDaemon(true);
-        follow.start();
+        //avoid.setDaemon(true);
+        //avoid.start();
+        //follow.setDaemon(true);
+        //follow.start();
         cruise.setDaemon(true);
         cruise.start();
 	    	      
