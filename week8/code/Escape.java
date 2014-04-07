@@ -4,10 +4,9 @@ import lejos.util.Delay;
 class Escape extends Thread {
     private final SharedCar car;
 
-    private int power = 100;
-    private TouchSensor touchLeft = new TouchSensor(SensorPort.S1);
-    private TouchSensor touchRight = new TouchSensor(SensorPort.S4);
-    private int stopThreshold = 50;
+    private final int power = 100;
+    private final TouchSensor touchLeft = new TouchSensor(SensorPort.S1);
+    private final TouchSensor touchRight = new TouchSensor(SensorPort.S4);
 
     public Escape(SharedCar car) {
 	this.car = car;
