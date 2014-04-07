@@ -19,10 +19,20 @@ class Escape extends Thread{
 			if(touchLeft.isPressed() && touchRight.isPressed()){ // both bumpers are pressed
 				car.backward(power,power);
 				Delay.msDelay(1000);
-				car.forward(0,power) // turn left
+				car.forward(power,0); // turn left
 				Delay.msDelay(ms);
 			}
-			else if(touchLeft.isPressed())
+			else if(touchLeft.isPressed()){
+				car.backward(0,power);
+				Delay.msDelay(ms);
+			}
+			else if(touchRight.isPressed()){
+				car.backward(power,0);
+				Delay.msDelay(ms);
+			}
+			else{
+	    		car.noCommand();
+			}
         }
     }
 }
