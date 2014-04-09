@@ -1,0 +1,62 @@
+9 april kl 10
+Henrik
+
+plan: prøve forskellige motor samt gear og se hvad der får NXT'en hurtigst op af bakke
+      evt bagefter bygge en fornuftig vogn og finde en måde at få den bedst styret på
+
+plan for bedste styring: 
+	Indtil videre har jeg overvejet at tre lysdioder ville give et godt resultat, en rød på hver side af en farvet 
+	så den farvet vil holde sig på den sorte linie og en rød vil holde sig på hvid på hver side af den sorte
+	når den farvet kommer ud af det sorte fortsætter den og venter til en rød kommer ind i det sorte og derefter drejer den mod den side
+	og kommer tilbage ind på den sorte linie...
+
+motor og gear del 1:
+	2. gen motor med store hjul (81,6x15) og mindre hjul (56x26).
+	1 til 1 gearing (samme størrelser af tandhjul) forskellige størrelser af hjul
+		1. forsøg med store hjul (1 motoromdrejning [mdr] = 81,6*pi = 25,6cm kørsel = 25,6cm/mdr, omkring 3 sek for et niveau [video 1]
+		2. forsøg med mindre hjul (17,5cm/mdr), noget langsommere omkring 4 sek [video 2]
+		
+		Jeg foretog 5 kørsler med de to forskelligehjul videoerne viser de pæneste kørsler..
+		konklusion gearingen skal ikke være mindre en den som den er med de mindre hjul, altså
+		skal den være mellem gearing eller en gearing der er størrer en med de store hjul..
+
+	forsøger nu med en gearing 40 hak tandhjul til 8 hak = 5 gange gearing (billede)
+		2. forsøg, med de mindre hjul 87,5cm/mdr 
+			Bilen er for håjt gearet og står nærmest stille [no video]
+
+	forsøger nu med 40 til 26 = 1,66 gearing
+		de mindre hjul = 29 cm/mdr .. omkring 4-5 sek, den kæmper med at komme helt op [video 3]
+
+	altså kan der konkluderes at gearingen er mellem 14,5 og 29 cm/mdr
+	Jeg beslutter mig for at blive med en gearing på 25,6cm/mdr eftersom jeg ikke kan finde tandhjul og hjul til at ramme en gearing mellem 14,5 og 25,6
+
+motor og gear del 2: nxt motor
+	Har bygget en simpel lidt faldefærdig bil med to nxt motor uden ekstra gearing og med 100 i power, blev nødtil at holde bilen samlet mens den kørte op
+	hvilket tog lidt over 4 sek [video 4]
+
+	forsøger med mindre power?
+
+	skal forsøge med gearing eller bare fortsæt med de gamle motor?
+
+Styring
+	Jeg henlægger forsæg med to nxt motor til jeg får bygget en bedre bil..
+	så fortsætter med de gamle motor og går igang med at lege med styring og kodning af styring..
+
+	først bygger jeg styring af tre lyssensor (billede)
+	den sorte streg på banen er 1,5cm bred
+
+	Det lykkes at få værdier ind fra de tre sensors
+	Det lykkes at starte motorne, MEN KAN IKKE STOPPE DEM IGEN?! HVILKEN CLASS JEG SKAL JEG BRUGE?
+
+15.00 - end
+
+
+
+
+
+
+
+
+
+
+
