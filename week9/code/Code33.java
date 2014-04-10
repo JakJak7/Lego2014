@@ -9,10 +9,7 @@ public class Code33 {
 		Motor.A.forward();
 		Motor.B.forward();
 	    }
-	    else {
-		Motor.A.backward();
-		Motor.B.backward();
-	    }
+
 	    while (Button.LEFT.isDown()){
 		LCD.drawInt(-666,4,10,0);
 		Motor.A.stop();
