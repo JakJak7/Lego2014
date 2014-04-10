@@ -39,7 +39,7 @@ public class Code3 {
     private boolean up() throws Exception {
 	while (true) {
 	    print();
-	    if (us.getDistance() == 11) {
+	    if (us.getDistance() >= 11){
 		return true;
 	    }
 	    else {
@@ -48,43 +48,35 @@ public class Code3 {
 		    mr.setPower(100);
 		}
 		if (!isWhite(1))
-		    mr.setPower(30);
+		    mr.setPower(20);
 		if (!isWhite(2))
-		    ml.setPower(30);
+		    ml.setPower(20);
 	    }
 	}
     }
     private boolean RightTurn() throws Exception {
-	int turn = 300;
-	int forward = 500;
-	ml.setPower(100);
-	mr.setPower(100);
-	Thread.sleep(50);
 	ml.setPower(100);
 	mr.setPower(-100);
-	Thread.sleep(turn);
+	Thread.sleep(250);
+	
+
+	ml.setPower(100);
 	mr.setPower(100);
-	Thread.sleep(forward);
-	mr.setPower(-100);
-	Thread.sleep(150);
-	ml.stop();
-	mr.stop();
+	Thread.sleep(400);
+
 	return false;
     }
 
     public Code3()  throws Exception {
-	//	rightturn();
 	cs.setFloodlight(Color.WHITE);
-	//startzone();
-	//RightTurn();
-	
+
 	startzone();
 	LCD.drawString("startzone done", 0, 5); 
 	up();
 	LCD.drawString("niveau 1 done", 0, 5); 
-	//RightTurn();
+	RightTurn();
 	LCD.drawString("rightturn done", 0, 5); 
-	//up();
+	up();
 	LCD.drawString("niveau 2 done", 0, 5); 	
 	while(true){
 	    print();
