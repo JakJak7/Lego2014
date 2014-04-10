@@ -51,6 +51,13 @@ Styring
 15.00 - end
 
 
+10 april 10.15
+Henrik og Jesper
+
+plan: Få motorne til at virke, derefter få sensors til at virke og derefter kode at bilen kan komme til toppen
+
+Vi fik motorne til at virke ved at bruge DCMotor interface med en RXTMotor instans, motorne fik derefter også en setPower funktion
+
 
 
 
