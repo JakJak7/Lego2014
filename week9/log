@@ -58,7 +58,11 @@ plan: Få motorne til at virke, derefter få sensors til at virke og derefter ko
 
 Vi fik motorne til at virke ved at bruge DCMotor interface med en RXTMotor instans, motorne fik derefter også en setPower funktion
 
+Robotten var ret skrøbelig i tidlige tests og gik i stykker adskillige gange ved fald udover kanten - vi har forstærket den ved brug af LEGO Technic-elementer.
 
+Robotten kan køre fra et plateau op til et andet. Vi detekterer plateauer ved brug af en ultralydssensor. Den måler 9 cm over overfladen, men idet den kører op over kanten til plateauet, øges afstanden til over 12 cm, hvilket vi reagerer på.
+
+Vi har pt. problemer med svingene; da vi anvender RCX-motorer, som ikke har tachocounter indbygget, kan vi ikke benytte antal rotationer, men er afhængige af tid. Dette gør at vores sving pt. har en meget stor varians.
 
 
 
