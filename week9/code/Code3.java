@@ -2,6 +2,7 @@ import lejos.nxt.*;
 import lejos.robotics.Color;
 import lejos.robotics.*;
 import lejos.nxt.addon.*;
+import java.lang.Math.*;
 
 public class Code3 {
     private final LightSensor l1 = new LightSensor(SensorPort.S1,true);
@@ -25,23 +26,24 @@ public class Code3 {
     private int getCL() {return cs.getNormalizedLightValue();}
     private int getL(int i){return ((i==1)?l1:l2).readValue();} // white: 35< sort: <35 lav
     private boolean isWhite(int i) {return getL(i) > 42;}
+    private DCMotorControl DCMC = new DCMotorControl();
 
-    private boolean startzone() {
-	ml.setPower(100);
-	mr.setPower(100);
+
+    private boolean startzone() throws Exception {
 	ml.forward();
 	mr.forward();
-	while (getC() == 1) {
+
+	DCMC.acc(ml,mr,0,100,30);
+	while (getC() == 1)
 	    print();
-	}
+
 	return true;
     }
     private boolean up() throws Exception {
 	while (true) {
 	    print();
-	    if (us.getDistance() >= 11){
+	    if (us.getDistance() >= 11)
 		return true;
-	    }
 	    else {
 		if (getC() == 7 || (isWhite(1) && isWhite(2))) {
 		    ml.setPower(100);
@@ -59,15 +61,14 @@ public class Code3 {
 	mr.setPower(-100);
 	Thread.sleep(250);
 	
-
-	ml.setPower(100);
-	mr.setPower(100);
-	Thread.sleep(400);
-
-	return false;
+	while (isWhite(1) && isWhite(2)) {}
+	ml.stop();
+	mr.stop();
+	return true;
+	
     }
 
-    public Code3()  throws Exception {
+    public Code3() throws Exception {
 	cs.setFloodlight(Color.WHITE);
 
 	startzone();
@@ -76,7 +77,7 @@ public class Code3 {
 	LCD.drawString("niveau 1 done", 0, 5); 
 	RightTurn();
 	LCD.drawString("rightturn done", 0, 5); 
-	up();
+	//up();
 	LCD.drawString("niveau 2 done", 0, 5); 	
 	while(true){
 	    print();
@@ -94,5 +95,41 @@ public class Code3 {
 	    });
 	
 	new Code3();
+
+    }
+}
+
+class DCMotorControl extends Thread {
+    protected void acc(DCMotor m, int start, int end, int step) throws Exception {
+	m.setPower(start);
+	if (start < end)
+	    for(int i = 1;i <= step; i++) {
+		Thread.sleep(5);
+		m.setPower(start+(end-start)/step*i);
+	    }
+	else 
+	    for(int i = 1;i <= step; i++) {
+		Thread.sleep(5);
+		m.setPower(start+(end-start)/step*i);
+	    }
+	m.setPower(end);	
+    }
+    protected void acc(DCMotor m1,DCMotor m2, int start, int end, int step) throws Exception {
+	m1.setPower(start);
+	m2.setPower(start);
+	if (start < end)
+	    for(int i = 1;i <= step; i++) {
+		Thread.sleep(5);
+		m1.setPower(start+(end-start)/step*i);
+		m2.setPower(start+(end-start)/step*i);
+	    }
+	else 
+	    for(int i = 1;i <= step; i++) {
+		Thread.sleep(5);
+		m1.setPower(start+(end-start)/step*i);
+		m2.setPower(start+(end-start)/step*i);
+	    }
+	m1.setPower(end);
+	m2.setPower(end);
     }
 }
