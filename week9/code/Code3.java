@@ -1,84 +1,89 @@
 import lejos.nxt.*;
-import lejos.robotics.Color;
 import lejos.robotics.*;
 import lejos.nxt.addon.*;
 import java.lang.Math.*;
+//import lejos.nxt.addon.CompassHTSensor;
 
 public class Code3 {
     private final LightSensor l1 = new LightSensor(SensorPort.S1,true);
     private final LightSensor l2 = new LightSensor(SensorPort.S2,true);
-    private final ColorSensor cs = new ColorSensor(SensorPort.S3);
+    private final UltrasonicSensor us = new UltrasonicSensor(SensorPort.S3);
+    private final CompassHTSensor chs  = new CompassHTSensor(SensorPort.S4);
     private final DCMotor ml = new RCXMotor(MotorPort.A);
     private final DCMotor mr = new RCXMotor(MotorPort.B);
-    private final UltrasonicSensor us = new UltrasonicSensor(SensorPort.S4);
+    private long starttime;
+    
     private void print() {
 	LCD.drawString("Light: ", 0, 0); 
-	LCD.drawString("Color: ", 0, 1); 
-	LCD.drawString("Light: ", 0, 2); 
-	LCD.drawString("Ultra: ", 0, 3); 
+	LCD.drawString("Light: ", 0, 1);
+	LCD.drawString("Ultra: ", 0, 2);
+	LCD.drawString("Compa: ", 0, 3);
+	LCD.drawString("Time:", 0, 4); 
 	LCD.drawInt(getL(1),4,10,0);
-	LCD.drawInt(getC() ,4,5,1);
-	LCD.drawInt(getCL() ,4,10,1);
-	LCD.drawInt(getL(2),4,10,2);
-	LCD.drawInt(us.getDistance(),4,10,3);
+	LCD.drawInt(getL(2),4,10,1);
+	LCD.drawInt(us.getDistance(),4,10,2);
+	LCD.drawInt(getD(),4,10,3);
+	LCD.drawInt((int) (System.currentTimeMillis()-starttime),4,10,4);
     }
-    private int getC() {return cs.getColor().getColor();}//1 = green, 7 = black, 6 = white?
-    private int getCL() {return cs.getNormalizedLightValue();}
+    //private final ColorSensor cs = new ColorSensor(SensorPort.S3);
+    //private int getC() {return cs.getColor().getColor();}//1 = green, 7 = black, 6 = white?
+    //private int getCL() {return cs.getNormalizedLightValue();}
+    //private DCMotorControl DCMC = new DCMotorControl();
+
+    private int getD() {return (int) chs.getDegrees();}
     private int getL(int i){return ((i==1)?l1:l2).readValue();} // white: 35< sort: <35 lav
-    private boolean isWhite(int i) {return getL(i) > 42;}
-    private DCMotorControl DCMC = new DCMotorControl();
-
-
+    private boolean isWhite(int i) {return getL(i)>42;}
+    
     private boolean startzone() throws Exception {
 	ml.forward();
 	mr.forward();
-
-	DCMC.acc(ml,mr,0,100,30);
-	while (getC() == 1)
-	    print();
-
+	ml.setPower(100);
+	mr.setPower(100);
+	// while (getC() == 1)
+	// print();
 	return true;
     }
     private boolean up() throws Exception {
+	long starttime = System.currentTimeMillis()+2000;
 	while (true) {
 	    print();
-	    if (us.getDistance() >= 11)
+	    if (starttime < System.currentTimeMillis() && us.getDistance() >= 10)
 		return true;
-	    else {
-		if (getC() == 7 || (isWhite(1) && isWhite(2))) {
+	    else
+		if (isWhite(1) && isWhite(2)) {
 		    ml.setPower(100);
 		    mr.setPower(100);
 		}
-		if (!isWhite(1))
-		    mr.setPower(20);
-		if (!isWhite(2))
-		    ml.setPower(20);
-	    }
+		else if (!isWhite(1)) mr.setPower(40);
+		else if (!isWhite(2)) ml.setPower(40);
 	}
     }
     private boolean RightTurn() throws Exception {
 	ml.setPower(100);
 	mr.setPower(-100);
-	Thread.sleep(250);
+	//Thread.sleep(250);
 	
-	while (isWhite(1) && isWhite(2)) {}
-	ml.stop();
-	mr.stop();
+	while (getD() > 205 && getD() < 215) //210
+	    print();
+
 	return true;
-	
     }
 
     public Code3() throws Exception {
-	cs.setFloodlight(Color.WHITE);
-
+	//cs.setFloodlight(Color.WHITE);
+	starttime = System.currentTimeMillis();
 	startzone();
-	LCD.drawString("startzone done", 0, 5); 
+	LCD.drawString("x", 0, 6); 
 	up();
-	LCD.drawString("niveau 1 done", 0, 5); 
+	LCD.drawString("x", 1, 6); 
 	RightTurn();
-	LCD.drawString("rightturn done", 0, 5); 
-	//up();
-	LCD.drawString("niveau 2 done", 0, 5); 	
+	ml.stop();
+	mr.stop();
+	LCD.drawString("x", 2, 6); 
+
+	LCD.drawString("End time:", 0, 7); 
+	LCD.drawInt((int) (System.currentTimeMillis()-starttime),4,10,7);
+
 	while(true){
 	    print();
 	}
