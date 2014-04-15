@@ -32,11 +32,11 @@ public class Code3 {
 
     private int getD() {return (int) chs.getDegrees();}
     private int getL(int i){return ((i==1)?l1:l2).readValue();} // white: 35< sort: <35 lav
-    private boolean isWhite(int i) {return getL(i)>42;}
+    private boolean isWhite(int i) {return getL(i)>45;}
     
     private boolean startzone() throws Exception {
-	ml.forward();
 	mr.forward();
+	ml.backward();
 	ml.setPower(100);
 	mr.setPower(100);
 	// while (getC() == 1)
@@ -44,28 +44,28 @@ public class Code3 {
 	return true;
     }
     private boolean up() throws Exception {
-	long starttime = System.currentTimeMillis()+2000;
+	long starttimeu = System.currentTimeMillis()+2000;
 	while (true) {
 	    print();
-	    if (starttime < System.currentTimeMillis() && us.getDistance() >= 10)
+	    if (starttimeu < System.currentTimeMillis() && us.getDistance() >= 11 && us.getDistance() != 255)
 		return true;
 	    else
 		if (isWhite(1) && isWhite(2)) {
 		    ml.setPower(100);
 		    mr.setPower(100);
 		}
-		else if (!isWhite(1)) mr.setPower(40);
-		else if (!isWhite(2)) ml.setPower(40);
+		else if (!isWhite(1)) mr.setPower(70);
+		else if (!isWhite(2)) ml.setPower(70);
 	}
     }
     private boolean RightTurn() throws Exception {
-	ml.setPower(100);
-	mr.setPower(-100);
+	ml.setPower(-100);
+	mr.setPower(100);
 	//Thread.sleep(250);
 	
-	while (getD() > 205 && getD() < 215) //210
+	while (getD() < 190 || getD() > 200) //210
 	    print();
-
+	ml.setPower(100);
 	return true;
     }
 
