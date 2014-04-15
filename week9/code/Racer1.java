@@ -2,15 +2,16 @@ import lejos.nxt.*;
 import lejos.robotics.*;
 import lejos.nxt.addon.*;
 import java.lang.Math.*;
-//import lejos.nxt.addon.CompassHTSensor;
 
-public class Code3 {
+public class Racer1 {
     private final LightSensor l1 = new LightSensor(SensorPort.S1,true);
     private final LightSensor l2 = new LightSensor(SensorPort.S2,true);
     private final UltrasonicSensor us = new UltrasonicSensor(SensorPort.S3);
     private final CompassHTSensor chs  = new CompassHTSensor(SensorPort.S4);
     private final DCMotor ml = new RCXMotor(MotorPort.A);
     private final DCMotor mr = new RCXMotor(MotorPort.B);
+    private final int LEFT=1;
+    private final int RIGHT=2;
     private long starttime;
     
     private void print() {
@@ -19,19 +20,15 @@ public class Code3 {
 	LCD.drawString("Ultra: ", 0, 2);
 	LCD.drawString("Compa: ", 0, 3);
 	LCD.drawString("Time:", 0, 4); 
-	LCD.drawInt(getL(1),4,10,0);
-	LCD.drawInt(getL(2),4,10,1);
-	LCD.drawInt(us.getDistance(),4,10,2);
-	LCD.drawInt(getD(),4,10,3);
+	LCD.drawInt(getL(LEFT),4,10,0);
+	LCD.drawInt(getL(RIGHT),4,10,1);
+	LCD.drawInt(getU(),4,10,2);
+	LCD.drawInt(getC(),4,10,3);
 	LCD.drawInt((int) (System.currentTimeMillis()-starttime),4,10,4);
     }
-    //private final ColorSensor cs = new ColorSensor(SensorPort.S3);
-    //private int getC() {return cs.getColor().getColor();}//1 = green, 7 = black, 6 = white?
-    //private int getCL() {return cs.getNormalizedLightValue();}
-    //private DCMotorControl DCMC = new DCMotorControl();
-
-    private int getD() {return (int) chs.getDegrees();}
-    private int getL(int i){return ((i==1)?l1:l2).readValue();} // white: 35< sort: <35 lav
+    private int getU() {return us.getDistance();}
+    private int getC() {return (int) chs.getDegrees();}
+    private int getL(int i){return ((i==LEFT)?l1:l2).readValue();}
     private boolean isWhite(int i) {return getL(i)>45;}
     
     private boolean startzone() throws Exception {
@@ -39,55 +36,49 @@ public class Code3 {
 	ml.backward();
 	ml.setPower(100);
 	mr.setPower(100);
-	// while (getC() == 1)
-	// print();
 	return true;
     }
     private boolean up() throws Exception {
 	long starttimeu = System.currentTimeMillis()+2000;
 	while (true) {
 	    print();
-	    if (starttimeu < System.currentTimeMillis() && us.getDistance() >= 11 && us.getDistance() != 255)
+	    if (starttimeu < System.currentTimeMillis() && getU() >= 11 && getU() != 255)
 		return true;
 	    else
-		if (isWhite(1) && isWhite(2)) {
+		if (isWhite(LEFT) && isWhite(RIGHT)) {
 		    ml.setPower(100);
 		    mr.setPower(100);
 		}
-		else if (!isWhite(1)) mr.setPower(70);
-		else if (!isWhite(2)) ml.setPower(70);
+		else if (!isWhite(LEFT)) mr.setPower(70);
+		else if (!isWhite(RIGHT)) ml.setPower(70);
 	}
     }
     private boolean RightTurn() throws Exception {
 	ml.setPower(-100);
 	mr.setPower(100);
-	//Thread.sleep(250);
-	
-	while (getD() < 190 || getD() > 200) //210
+
+	while (getC() < 190 || getC() > 200) //210 //turn left - turn right.. to hit the exact degree
 	    print();
 	ml.setPower(100);
 	return true;
     }
 
-    public Code3() throws Exception {
-	//cs.setFloodlight(Color.WHITE);
+    public Racer1() throws Exception {
 	starttime = System.currentTimeMillis();
 	startzone();
-	LCD.drawString("x", 0, 6); 
+	LCD.drawString("a", 0, 6); 
 	up();
-	LCD.drawString("x", 1, 6); 
+	LCD.drawString("bb", 0, 6); 
 	RightTurn();
 	ml.stop();
 	mr.stop();
-	LCD.drawString("x", 2, 6); 
+	LCD.drawString("ccc", 0, 6); 
 
 	LCD.drawString("End time:", 0, 7); 
 	LCD.drawInt((int) (System.currentTimeMillis()-starttime),4,10,7);
 
-	while(true){
-	    print();
-	}
-	
+	while(true)
+	    print();	
     }
 
     public static void main(String[] args)  throws Exception {
@@ -99,11 +90,12 @@ public class Code3 {
 		public void buttonReleased(Button b) {} 
 	    });
 	
-	new Code3();
-
+	new Racer1();
     }
 }
 
+/*
+Accelerate motor
 class DCMotorControl extends Thread {
     protected void acc(DCMotor m, int start, int end, int step) throws Exception {
 	m.setPower(start);
@@ -138,3 +130,4 @@ class DCMotorControl extends Thread {
 	m2.setPower(end);
     }
 }
+*/
