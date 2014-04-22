@@ -1,7 +1,9 @@
 import lejos.nxt.*;
+import lejos.nxt.Sound;
 import lejos.robotics.*;
 import lejos.nxt.addon.*;
 import java.lang.Math.*;
+import java.io.*;
 
 public class Racer1 {
     private final LightSensor l1 = new LightSensor(SensorPort.S1,true);
@@ -13,7 +15,8 @@ public class Racer1 {
     private final int LEFT=1;
     private final int RIGHT=2;
     private long starttime;
-    
+    private int whitevalue = 42;
+
     private void print() {
 	LCD.drawString("Light: ", 0, 0); 
 	LCD.drawString("Light: ", 0, 1);
@@ -29,7 +32,7 @@ public class Racer1 {
     private int getU() {return us.getDistance();}
     private int getC() {return (int) chs.getDegrees();}
     private int getL(int i){return ((i==LEFT)?l1:l2).readValue();}
-    private boolean isWhite(int i) {return getL(i)>42;}
+    private boolean isWhite(int i) {return getL(i)>whitevalue;}
     private int max=100;
     
     private boolean startzone() throws Exception {
@@ -40,7 +43,7 @@ public class Racer1 {
 	return true;
     }
     private boolean up() throws Exception {
-	long timeout = System.currentTimeMillis()+1000;
+	long timeout = System.currentTimeMillis()+2000;
 	while (true) {
 	    print();
 	    if (timeout < System.currentTimeMillis() && getU() >= 10 && getU() != 255) {
@@ -52,32 +55,69 @@ public class Racer1 {
 		    ml.setPower(max);
 		    mr.setPower(max);
 		}
+		else if (!isWhite(LEFT) && !isWhite(RIGHT)) {
+		    mr.setPower(max);
+		    ml.setPower(max);
+		}
 		else if (!isWhite(LEFT)) {
 		    mr.setPower(max);
-		    ml.setPower(90);
+		    ml.setPower(75);
 		}
 		else if (!isWhite(RIGHT)){
 		    ml.setPower(max);
-		    mr.setPower(90);
+		    mr.setPower(75);
 		}
 	}
     }
-    private boolean RightTurn(int to) throws Exception {
-	while (true) {//P controller!!
+    private boolean down() throws Exception {
+	long timeout = System.currentTimeMillis()+1000;
+	max = 90;
+	while (true) {
 	    print();
-	    if (getC() < to-2) {
-		ml.setPower(max);
-		mr.setPower(-max);
+	    if (timeout < System.currentTimeMillis() && getU() <= 8) {
+		while (getU() <= 8){}
+		return true;
 	    }
-	    else if (getC() > to+2) {
-		ml.setPower(-max);
-		mr.setPower(max);
+	    else
+		if (isWhite(LEFT) && isWhite(RIGHT)) {
+		    ml.setPower(max);
+		    mr.setPower(max);
+		}
+		else if (!isWhite(LEFT)) {
+		    mr.setPower(max);
+		    ml.setPower(max);
+		}
+		else if (!isWhite(RIGHT)){
+		    ml.setPower(max);
+		    mr.setPower(max);
+		}
+	}
+    }
+    private boolean Turn(int target,int deviation) throws Exception {
+	int p = max;
+
+	while (true) {
+	    print();
+	    int angle = (target-getC())%360;
+
+	    if (angle > 180)
+		angle = angle-360;
+
+	    if (angle < -deviation) {
+		ml.setPower(-p);
+		mr.setPower(p);
+	    }
+	    else if (angle > deviation) {
+		ml.setPower(p);
+		mr.setPower(-p);
 	    }
 	    else {
 		ml.setPower(0);
 		mr.setPower(0);
 		Thread.sleep(30);
-		if (getC() > to-5 && getC() < to+5)
+		angle = (target-getC())%360;
+		p-=2;
+		if (angle > -deviation && angle < deviation)
 		    break;
 	    }
 	}
@@ -85,31 +125,46 @@ public class Racer1 {
 	mr.setPower(max);
 	return true;
     }
-    private boolean GetUp() {
-	long timeout = System.currentTimeMillis()+300;
+
+    private boolean GetPos(int side) {
 	ml.setPower(max);
 	mr.setPower(max);
-	while(timeout > System.currentTimeMillis() || getU() > 8){print();}
+	int c = 0;
+	while (c < 2) {
+	    if (!isWhite(side)) {
+		c++;
+		Sound.beep();
+		if (c == 2)
+		    break;
+	    }
+	    while(!isWhite(side));
+	    while(isWhite(side));
+	}
 	return true;
     }
+
     public Racer1() throws Exception {
 	starttime = System.currentTimeMillis();
 	startzone();
-	LCD.drawString("a", 0, 6); 
 	up();
-	LCD.drawString("b", 0, 6); 
-	RightTurn(215);
-	LCD.drawString("c", 0, 6); 
-	GetUp();
-	LCD.drawString("d", 0, 6); 
-	RightTurn(236);
-	LCD.drawString("e", 0, 6); 
+	Turn(220,4);
+	GetPos(RIGHT);
+	Turn(240,3);
 	up();
-	LCD.drawString("f", 0, 6); 
+	Turn(100,4);
+	GetPos(LEFT);
+	Turn(352,4);
+	up();
+	Turn(222,2);
+	down();
+	
 	ml.stop();
 	mr.stop();
 	LCD.drawString("End time:", 0, 7); 
 	LCD.drawInt((int) (System.currentTimeMillis()-starttime),4,10,7);
+
+	File f = new File("FF1_Victory_2.wav");
+	Sound.playSample(f);
 
 	while(true)
 	    print();	
@@ -118,7 +173,6 @@ public class Racer1 {
     public static void main(String[] args)  throws Exception {
 	Button.ESCAPE.addButtonListener(new ButtonListener() {
 		public void buttonPressed(Button b) {
-		    //playSound("FF1_victory_2.wav");
 		    System.exit(1);
 		}
 		public void buttonReleased(Button b) {} 
