@@ -90,12 +90,23 @@ Nu kunne vi komme op på første pivo og få stoppet bilen uden de store problem
 
 .. pt er der ikke noget der virker helt perfekt.. vi skal have en god ide gutter..!! :)
 
-11. april 16-17
+11. april kl 16-17
 	vi mødtes og testede en strategi, det virkede ikke
 
-14. april 13
+14. april kl 13-18
+	Henrik og Jesper
+	vi legede med compass og fået skrevet noget kode der virker (så vi kan aflæse kompasset)
+	byggede bilen om så den var mere stabil
+	teste med at få bilen op af rampen og dreje og få den til at komme op af den anden rampe (tilføjet strategi)
+	dreje: rette ind efter kompas, vente og se om den stadig har aflæst den rigtige vinkel, ellers dreje og vente osv.,.
+	op af bakke: når ultrasonic sensoren kommer tættere på underlaget (så er den på vej op) ...
 	
 
+15. april 14-18
+	Henrik
+	byggede bilen om flere gange, prøvede med forskellige hjul (2 i stedet for 4 (samt et støttehjul), men det virkede ikke den fik for meget modstand når den prøvede at dreje..)
+	så gik tilbage til den gamle model og fik sat støtter på hjulene så stængerne ikke bukkede og bilen kørte til tilfældige sider.. hvilket hjalp en helt del
+	brugte den sidste time på at få den til at dreje bedre..
 
 
 
