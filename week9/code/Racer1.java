@@ -29,51 +29,85 @@ public class Racer1 {
     private int getU() {return us.getDistance();}
     private int getC() {return (int) chs.getDegrees();}
     private int getL(int i){return ((i==LEFT)?l1:l2).readValue();}
-    private boolean isWhite(int i) {return getL(i)>45;}
+    private boolean isWhite(int i) {return getL(i)>42;}
+    private int max=100;
     
     private boolean startzone() throws Exception {
-	mr.forward();
-	ml.backward();
-	ml.setPower(100);
-	mr.setPower(100);
+	ml.forward();
+	mr.backward();
+	ml.setPower(max);
+	mr.setPower(max);
 	return true;
     }
     private boolean up() throws Exception {
-	long starttimeu = System.currentTimeMillis()+2000;
+	long timeout = System.currentTimeMillis()+1000;
 	while (true) {
 	    print();
-	    if (starttimeu < System.currentTimeMillis() && getU() >= 11 && getU() != 255)
+	    if (timeout < System.currentTimeMillis() && getU() >= 10 && getU() != 255) {
+		while (getU() >= 10){}
 		return true;
+	    }
 	    else
 		if (isWhite(LEFT) && isWhite(RIGHT)) {
-		    ml.setPower(100);
-		    mr.setPower(100);
+		    ml.setPower(max);
+		    mr.setPower(max);
 		}
-		else if (!isWhite(LEFT)) mr.setPower(70);
-		else if (!isWhite(RIGHT)) ml.setPower(70);
+		else if (!isWhite(LEFT)) {
+		    mr.setPower(max);
+		    ml.setPower(90);
+		}
+		else if (!isWhite(RIGHT)){
+		    ml.setPower(max);
+		    mr.setPower(90);
+		}
 	}
     }
-    private boolean RightTurn() throws Exception {
-	ml.setPower(-100);
-	mr.setPower(100);
-
-	while (getC() < 190 || getC() > 200) //210 //turn left - turn right.. to hit the exact degree
+    private boolean RightTurn(int to) throws Exception {
+	while (true) {//P controller!!
 	    print();
-	ml.setPower(100);
+	    if (getC() < to-2) {
+		ml.setPower(max);
+		mr.setPower(-max);
+	    }
+	    else if (getC() > to+2) {
+		ml.setPower(-max);
+		mr.setPower(max);
+	    }
+	    else {
+		ml.setPower(0);
+		mr.setPower(0);
+		Thread.sleep(30);
+		if (getC() > to-5 && getC() < to+5)
+		    break;
+	    }
+	}
+	ml.setPower(max);
+	mr.setPower(max);
 	return true;
     }
-
+    private boolean GetUp() {
+	long timeout = System.currentTimeMillis()+300;
+	ml.setPower(max);
+	mr.setPower(max);
+	while(timeout > System.currentTimeMillis() || getU() > 8){print();}
+	return true;
+    }
     public Racer1() throws Exception {
 	starttime = System.currentTimeMillis();
 	startzone();
 	LCD.drawString("a", 0, 6); 
 	up();
-	LCD.drawString("bb", 0, 6); 
-	RightTurn();
+	LCD.drawString("b", 0, 6); 
+	RightTurn(215);
+	LCD.drawString("c", 0, 6); 
+	GetUp();
+	LCD.drawString("d", 0, 6); 
+	RightTurn(236);
+	LCD.drawString("e", 0, 6); 
+	up();
+	LCD.drawString("f", 0, 6); 
 	ml.stop();
 	mr.stop();
-	LCD.drawString("ccc", 0, 6); 
-
 	LCD.drawString("End time:", 0, 7); 
 	LCD.drawInt((int) (System.currentTimeMillis()-starttime),4,10,7);
 
