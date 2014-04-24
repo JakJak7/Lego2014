@@ -35,8 +35,9 @@ motor og gear del 2: nxt motor
 	hvilket tog lidt over 4 sek [video 4]
 
 	forsøger med mindre power?
-
 	skal forsøge med gearing eller bare fortsæt med de gamle motor?
+	
+	Det kunne være sjovt at prøve at gøre det med de gamle motor som ikke har tachocount mm..
 
 Styring
 	Jeg henlægger forsæg med to nxt motor til jeg får bygget en bedre bil..
@@ -56,6 +57,7 @@ Henrik og Jesper
 
 plan: Få motorne til at virke, derefter få sensors til at virke og derefter kode at bilen kan komme til toppen
 
+<<<<<<< HEAD
 Vi fik motorne til at virke ved at bruge DCMotor interface med en RXTMotor instans, motorne fik derefter også en setPower funktion
 
 Robotten var ret skrøbelig i tidlige tests og gik i stykker adskillige gange ved fald udover kanten - vi har forstærket den ved brug af LEGO Technic-elementer.
@@ -67,6 +69,58 @@ Vi har pt. problemer med svingene; da vi anvender RCX-motorer, som ikke har tach
 
 
 
+=======
+Vi fik motorne til at virke i stedet for at bruge Motor.a.(forward|backward|stop)() som var en regulated class.. så fandt vi DCMotor interface med en RXTMotor instans, motorne fik derefter også en setPower funktion
+
+Vi forsøgte med to lyssensore og en farvesensor som var sat på ved siden af hinanden (lys, farve, lys) at dirigere bilen. Ideen var at så længe en lyssensor så hvid og farve sensoren så farven sort så kørte bilen frem
+hvis farve sensoren begyndte at se hvid fortsatte bilen frem indtil en af lyssensorne så sort og bilen justerede så derefter.
+	Det begyndte at give lidt problemer, det var somom at farvesensoren ikke altid kunne finde ud af om det var hvid eller sort, så bilen stoppede. 
+	Vi valgte så en mere simpel løsning, med bare to lyssensore til at følge linine op af bakken, så to lyssensore på hver side af den sorte streg, når bilen 
+	kører lidt skævt, vil en af lyssensorne komme ind i det sorte og bilen justere så efterfølgende.
+	Dette lader til at virke sort set i alle forsøg.. vi fandt ud af at vores bil accelere kraftigt hvilket gør at den hopper og nogle gange får nogle lysværdier der ikke passer og kører af sporet..
+	vi overvejer at implementere en accelere metode i koden så bilen får en mere blød start.. TODO..
+
+Det lykkes os at få bilen til at komme op af bakken, men den har det med at fortsætte ud over kanten, vi valgte at forsøge med farvesensoren igen og at den skulle se farven hvid x antal gange (imellem 5-100 forsøgte vi) før 
+den endelig stoppede.. dette resulterede i at den nogle gange 5/10 stoppede på pivoet, og resten af gangene kørte ud over kanten for enden af pivoet, altså en stor tilfældighed vi ikke var tilfredse med.
+Vi overvejede så at lade bilen stoppe når den nåede til enden af pivoet, hvor der er en fed sort streg, så hvis begge lysdioderne så sort så vidste den at den var ved enden, WHY gjorde vi ikke noget med det?
+Vi satte hovederne i blød for at finde på en mere "effektiv" løsning og fandt på at bruge en ultralydsdimmer, vi fastgjorde den på en "lang klods" øverst bagpå vores bil .. billeder...
+	ideen er at når bilen fra er plan på en overflade (står stille på et pivo eller er på en bakke) så er ultralydsdimmeren i samme afsand over banen, men når bilen starter på en bakke kommer ultralydsdimemren tættere på banen
+	hvilket vi kan måle, og når bilen kommer fra en bakke og op på et pivo vil ultralydsdimmeren komme længere væk fra bakken som vi også kan måle..
+	Vi valgte at implementere dette og havde fornuftige tests, men et par gange nåede den ikke at registrere at den var nået op.. 
+	Vi prøvede at sætte en vinkel (ca0-45 grader bagud) på ultralydsdimmeren i håb om at når bilen kom op af ramen ville ultralydsdimmeren givet meget størrer målinger.
+	Dette var også resultatet i vores forsøgsmålinger, vi satte os til at kode den nye strategi. Dog fandt vi ud af at når bilen var på toppen fik vi værdien 255 på ultralydsdimmeren.. hvilket vi også fik mange af når den kørte 
+	op af rampen, vi konkluderede at på grund af rampens vinkel så blev alle lydbølgerne skydt ud i rummet og intet ekko kom tilbage.. vi prøvede selv med meget små vinkler, men fik ikke bedre resultater..
+	Vi droppede så ideen med at have en vinkel, og forsøgte istedet at have en længere stang, så at afstanden på planen var den samme, men i start og slut blev meget størrer.. og dette resulterede i at virke i alle vores tests 100% :)
+
+Nu kunne vi komme op på første pivo og få stoppet bilen uden de store problemer.. vi skal nu have drejet bilen.
+	Vi kan se at bilen komme op på pivoet og stopper i lidt forskellige vinkler, hvilket vi regner med vil komme til at give nogle problemer.
+	men drejes skal der og vi har nogle strategier for at få bilen drejet.
+	1. halvbue (i bund og grund have mere kraft på den ene motor i forhold til den anden og holde den kraft konstant til bilen har drejet sig 180 grader + flyttet ?? 20 cm ??.)
+
+	2. 2 gange 90 grader. (drej 90 grader, kør frem, drej 90 grader)
+
+	2. trekant (kør frem, drej 120 grader og kør frem, så burde den ramme banen)
+
+.. pt er der ikke noget der virker helt perfekt.. vi skal have en god ide gutter..!! :)
+
+11. april kl 16-17
+	vi mødtes og testede en strategi, det virkede ikke
+
+14. april kl 13-18
+	Henrik og Jesper
+	vi legede med compass og fået skrevet noget kode der virker (så vi kan aflæse kompasset)
+	byggede bilen om så den var mere stabil
+	teste med at få bilen op af rampen og dreje og få den til at komme op af den anden rampe (tilføjet strategi)
+	dreje: rette ind efter kompas, vente og se om den stadig har aflæst den rigtige vinkel, ellers dreje og vente osv.,.
+	op af bakke: når ultrasonic sensoren kommer tættere på underlaget (så er den på vej op) ...
+	
+
+15. april 14-18
+	Henrik
+	byggede bilen om flere gange, prøvede med forskellige hjul (2 i stedet for 4 (samt et støttehjul), men det virkede ikke den fik for meget modstand når den prøvede at dreje..)
+	så gik tilbage til den gamle model og fik sat støtter på hjulene så stængerne ikke bukkede og bilen kørte til tilfældige sider.. hvilket hjalp en helt del
+	brugte den sidste time på at få den til at dreje bedre..
+>>>>>>> 8f2be007ea9e84a5a95299fb04afa31016e90760
 
 
 
