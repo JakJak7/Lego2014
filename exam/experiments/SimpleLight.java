@@ -15,19 +15,14 @@ public class SimpleLight {
     private static LightSensor l4 = new LightSensor(SensorPort.S4,false);
     private static File f;
     private static FileOutputStream fos;
-    public static void writeS(String s) {
-	try {
-            for(int i=0; i<s.length(); i++)
-		fos.write((byte)s.charAt(i));
-	}
-	catch(Exception e){}
+    public static void writeS(String s) throws Exception {
+	for(int i=0; i<s.length(); i++)
+	    fos.write((byte)s.charAt(i));
     }
     public static void main (String[] aArg) throws Exception {
 	f = new File("SimpleLightMes.txt");
-	try {
-	    if (f.exists()) f.delete();
-	    f.createNewFile();
-	}catch (Exception e){}
+	if (f.exists()) f.delete();
+	f.createNewFile();
 	fos = new FileOutputStream(f);
 	LCD.drawString("Press..",0,1);
 	LCD.drawString("LEFT/RIGHT:", 0, 2);
@@ -77,10 +72,7 @@ public class SimpleLight {
 	    LCD.drawInt(l4.readValue(), 2, 7, 3);
 	    LCD.drawInt(l4.readNormalizedValue(), 3, 10, 3);
 	}
-	try {
-	    fos.close();
-	}
-	catch (Exception e){}
+	fos.close();
     }
 }
 
