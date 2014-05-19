@@ -1,5 +1,7 @@
 import lejos.nxt.*;
 import java.io.*;
+import lejos.robotics.Color;
+import lejos.nxt.ADSensorPort;
 /**
    Simple program for LeJos NXT
    for reading lightvalue to screen and
@@ -11,8 +13,9 @@ import java.io.*;
 public class SimpleLight {
     private static LightSensor l1 = new LightSensor(SensorPort.S1,false);
     private static LightSensor l2 = new LightSensor(SensorPort.S2,false);
-    private static LightSensor l3 = new LightSensor(SensorPort.S3,false);
-    private static LightSensor l4 = new LightSensor(SensorPort.S4,false);
+    private static ColorSensor c3 = new ColorSensor(SensorPort.S3);
+    private static ColorSensor c4 = new ColorSensor(SensorPort.S4);
+
     private static File f;
     private static FileOutputStream fos;
     public static void writeS(String s) throws Exception {
@@ -20,6 +23,7 @@ public class SimpleLight {
 	    fos.write((byte)s.charAt(i));
     }
     public static void main (String[] aArg) throws Exception {
+
 	f = new File("SimpleLightMes.txt");
 	if (f.exists()) f.delete();
 	f.createNewFile();
@@ -34,43 +38,49 @@ public class SimpleLight {
 
 	while (!Button.LEFT.isDown() && !Button.RIGHT.isDown() && !Button.ESCAPE.isDown());
 	LCD.clear();
-	writeS("v1\tr1\tv2\tr2\tv3\tr3\tv4\tr4\n");
+	writeS("LightSensor #1: readValue() | readNormalizedValue() | #2. | #2.");
+	writeS("ColorSensor #3: r | g | b | #4 | #4 | #4\n");
 	while (!Button.ESCAPE.isDown()) {
 	    if (Button.LEFT.isDown()) {
 		l1.setFloodlight(true);
 		l2.setFloodlight(true);
-		l3.setFloodlight(true);
-		l4.setFloodlight(true);
+		c3.setFloodlight(Color.WHITE);
+		c4.setFloodlight(Color.WHITE);
 	    }
 	    else if (Button.RIGHT.isDown()) {
 		l1.setFloodlight(false);
 		l2.setFloodlight(false);
-		l3.setFloodlight(false);
-		l4.setFloodlight(false);
+		c3.setFloodlight(Color.WHITE);
+		c4.setFloodlight(Color.WHITE);
 	    }
+	    ColorSensor.Color c3r = c3.getRawColor();
+	    ColorSensor.Color c4r = c4.getRawColor();
 	    if (Button.ENTER.isDown()) {
 		writeS(l1.readValue()+"\t"+l1.readNormalizedValue()+'\t');
 		writeS(l2.readValue()+"\t"+l2.readNormalizedValue()+'\t');
-		writeS(l3.readValue()+"\t"+l3.readNormalizedValue()+'\t');
-		writeS(l4.readValue()+"\t"+l4.readNormalizedValue()+'\n');
+		writeS(c3r.getRed()+"|"+c3r.getGreen()+"|"+c3r.getBlue()+'\t');
+		writeS(c4r.getRed()+"|"+c4r.getGreen()+"|"+c4r.getBlue()+'\t');
+		writeS("\n");
 		while (Button.ENTER.isDown());
 	    }
 	    LCD.drawString("Light1:", 0, 0);
-	    LCD.drawString("Light2:", 0, 1);
-	    LCD.drawString("Light3:", 0, 2);
-	    LCD.drawString("Light4:", 0, 3);
 	    LCD.drawString(":", 9, 0);
+	    LCD.drawString("Light2:", 0, 1);
 	    LCD.drawString(":", 9, 1);
+	    LCD.drawString("C3:", 0, 2);
 	    LCD.drawString(":", 9, 2);
+	    LCD.drawString("C4:", 0, 3);
 	    LCD.drawString(":", 9, 3);
 	    LCD.drawInt(l1.readValue(), 2, 7, 0);
 	    LCD.drawInt(l1.readNormalizedValue(), 3, 10, 0);
 	    LCD.drawInt(l2.readValue(), 2, 7, 1);
 	    LCD.drawInt(l2.readNormalizedValue(), 3, 10, 1);
-	    LCD.drawInt(l3.readValue(), 2, 7, 2);
-	    LCD.drawInt(l3.readNormalizedValue(), 3, 10, 2);
-	    LCD.drawInt(l4.readValue(), 2, 7, 3);
-	    LCD.drawInt(l4.readNormalizedValue(), 3, 10, 3);
+	    LCD.drawInt(c3r.getRed(), 2, 4, 2);
+	    LCD.drawInt(c3r.getGreen(), 2, 9, 2);
+	    LCD.drawInt(c3r.getBlue(), 2, 13, 2);
+	    LCD.drawInt(c4r.getRed(), 2, 4, 3);
+	    LCD.drawInt(c4r.getGreen(), 2, 9, 3);
+	    LCD.drawInt(c4r.getBlue(), 2, 13, 3);
 	}
 	fos.close();
     }
