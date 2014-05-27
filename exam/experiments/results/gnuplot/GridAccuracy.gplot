@@ -1,0 +1,20 @@
+set terminal png
+set xlabel "Sample nr."
+set ylabel "Raw light value"
+set title "Lightvalues"
+
+set output "GridAccuracy3cm.png"
+plot "../GridAccuracy3cm.txt" using 1:2 w l title ""
+
+set output "GridAccuracyTilt.png"
+plot "../GridAccuracyTilt.txt" using 1:2 w l title ""
+
+set output "GridAccuracyFollowBlackTilt.png"
+plot "../GridAccuracyFollowBlackTilt.txt" using 1:2 w l title ""
+
+set output "GridAccuracyFollowBlack3cm.png"
+plot "../GridAccuracyFollowBlack3cm.txt" using 1:2 w l title ""
+
+set output "GridAccuracyFollowBlack3cmTCross.png"
+plot "../GridAccuracyFollowBlack3cmTCross.txt" using 1:2 w l title ""
+
