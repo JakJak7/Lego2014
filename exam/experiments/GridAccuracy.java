@@ -1,5 +1,6 @@
 import lejos.nxt.*;
 import java.io.*;
+import java.lang.Math;
 
 public class GridAccuracy {
     private LightSensor s1 = new LightSensor(SensorPort.S1,true);
@@ -22,7 +23,7 @@ public class GridAccuracy {
     public void calibrate() throws Exception {
 	//calibrate for margin
 	cal = (rnv(1)-rnv(2))/2;
-	
+	cal = 0;
 	// Green
 	green = rnv(1);
 	LCD.drawInt(green, 2, 7, 0);
@@ -39,66 +40,58 @@ public class GridAccuracy {
 	int threshold = 15;
 	return (rnv(1) > black-threshold && rnv(1) < black+threshold);
     }
-    private int power = -85;
+    private int power = -70;
 
-    public void turnright() {
-	controlMotor(MotorPort.B,-power);
-	controlMotor(MotorPort.C,power);
-	while(!Button.ESCAPE.isDown())
-	    if (isblack(2))
-		break;
-    }
-    public void turnleft() {
-	controlMotor(MotorPort.B,power);
-	controlMotor(MotorPort.C,-power);
-	while(isblack(1));
-	while(!Button.ESCAPE.isDown())
-	    if (isblack(1))
-		break;
-    }
-    public void follow() throws Exception{
-	white = white-50;
-	while (!Button.ESCAPE.isDown()) {
-	    if (rnv(1) >= white && rnv(2) >= white) {
-		controlMotor(MotorPort.B,power);
-		controlMotor(MotorPort.C,power);
-	    }
-	    else if (rnv(1) >= white && rnv(2) < white) {
-		controlMotor(MotorPort.B,power);
-		controlMotor(MotorPort.C,0);
-	    }
+    public void leftright() {
+	float wheelSize = 5.5f;
+	float width = 19.6f;
+	double degrees = 360*((width*2 * Math.PI)/4) / (wheelSize * Math.PI);
+	degrees = degrees * 1.05f; //error correction because of inaccuracies
+	Motor.B.rotate((int)degrees/2,true);
+	Motor.C.rotate(-(int)degrees/2);
 
-	    else if (rnv(1) < white && rnv(2) >= white) {
-		controlMotor(MotorPort.B,0);
-		controlMotor(MotorPort.C,power);
-	    }
-	    else if (rnv(1) < white && rnv(2) < white) {
-		controlMotor(MotorPort.B,0);
-		controlMotor(MotorPort.C,0);
-		//break;
-	    }
-	    
-	    LCD.drawInt(white, 2, 7, 2);
-	    LCD.drawInt(rnv(1), 2, 7, 4);
-	    LCD.drawInt(rnv(2), 2, 7, 5);
-	    LCD.drawInt(cal, 2, 7, 6);
-	    LCD.drawInt((rnv(1))-(rnv(2)), 2, 7, 7);
-	    Thread.sleep(20);
+    }
+    public void follow() {//black = 491
+	LightSensor sensor = new LightSensor(SensorPort.S1);
+	LCD.clear();
+	float Kp = 1f;
+	int Tp = 70;
+	int offset = (int) (white+black)/2;
+	float Ki = 0.00000f;
+	int integral =0;
+	LCD.drawInt(offset,0,3,0);
+	while (! Button.ESCAPE.isDown()) {
+	    int LightValue = sensor.readNormalizedValue();
+	    LCD.drawInt(LightValue,0,3,1);
+	    LCD.drawInt(offset,0,3,2);
+	    int error = LightValue - offset;
+	    integral += error;
+	    int Turn = (int) (Kp*error) + (int) (Ki*integral);
+	    int powerA = Tp+Turn;
+	    int powerB = Tp-Turn;
+	    LCD.drawInt(powerA,0,3,3);
+	    LCD.drawInt(powerB,0,3,4);
+
+	    LCD.drawInt(integral,0,3,5);
+	    LCD.drawInt((int) (Ki*integral),0,3,5);
+	    controlMotor(MotorPort.B,-powerA);
+	    controlMotor(MotorPort.C,-powerB);
 	}
     }
     public GridAccuracy() throws Exception {
-	controlMotor(MotorPort.B,power);
-	controlMotor(MotorPort.C,power);
+	Motor.B.setSpeed(600);// 2 RPM
+	Motor.C.setSpeed(600);
+	Motor.B.backward();
+	Motor.C.backward();
 
 	LCD.drawString("green: ", 0, 0);
 	LCD.drawString("black: ", 0, 1);
 	LCD.drawString("white: ", 0, 2);
 
 	calibrate();
-	turnright();
+	leftright();
 	follow();
-	turnright();
-	follow();
+	
     }
     public static void main (String[] aArg) throws Exception {
 	new GridAccuracy();
