@@ -46,16 +46,16 @@ public class GridAccuracy {
 	float wheelSize = 5.5f;
 	float width = 19.6f;
 	double degrees = 360*((width*2 * Math.PI)/4) / (wheelSize * Math.PI);
-	degrees = degrees * 1.05f; //error correction because of inaccuracies
-	Motor.B.rotate((int)degrees/2,true);
-	Motor.C.rotate(-(int)degrees/2);
+	degrees = degrees * 1.1f; //error correction because of inaccuracies
+	Motor.A.rotate((int)degrees/2,true);
+	Motor.B.rotate(-(int)degrees/2);
 
     }
     public void follow() {//black = 491
 	LightSensor sensor = new LightSensor(SensorPort.S1);
 	LCD.clear();
 	float Kp = 1f;
-	int Tp = 70;
+	int Tp = 80;
 	int offset = (int) (white+black)/2;
 	float Ki = 0.00000f;
 	int integral =0;
@@ -74,15 +74,15 @@ public class GridAccuracy {
 
 	    LCD.drawInt(integral,0,3,5);
 	    LCD.drawInt((int) (Ki*integral),0,3,5);
-	    controlMotor(MotorPort.B,-powerA);
-	    controlMotor(MotorPort.C,-powerB);
+	    controlMotor(MotorPort.A,powerA);
+	    controlMotor(MotorPort.B,powerB);
 	}
     }
     public GridAccuracy() throws Exception {
-	Motor.B.setSpeed(600);// 2 RPM
-	Motor.C.setSpeed(600);
-	Motor.B.backward();
-	Motor.C.backward();
+	Motor.A.setSpeed(600);// 2 RPM
+	Motor.B.setSpeed(600);
+	Motor.A.forward();
+	Motor.B.forward();
 
 	LCD.drawString("green: ", 0, 0);
 	LCD.drawString("black: ", 0, 1);
