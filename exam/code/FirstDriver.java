@@ -9,7 +9,7 @@ public class FirstDriver {
     private int green = -1;
     private int black = 1024;
     private int white = -1;
-    private int speed = 600;
+    private int power = 50;
 
     public int light() {
 	return sensor.readNormalizedValue();
@@ -23,15 +23,12 @@ public class FirstDriver {
     public static void controlMotor(MotorPort m, int value) {
 	if      (value > 0 ) m.controlMotor(value,1);
 	else if (value < 0 ) m.controlMotor(-1*value,2);
-	else if (value == 0) m.controlMotor(value,3);
+	else if (value == 0) m.controlMotor(value,3); //3 stop
     }
 
     public void calibrate() throws Exception {
-	Motor.A.setSpeed(speed);
-	Motor.B.setSpeed(speed);
-	Motor.A.forward();
-	Motor.B.forward();
-
+	controlMotor(MP1,power);
+	controlMotor(MP2,power);
 	green = light();
 	LCD.drawInt(green, 2, 7, 0);
 	while (light() < green+40);
@@ -42,16 +39,23 @@ public class FirstDriver {
 	while (light() < white-20)
 	    black = (light() < black)?light():black;
 	LCD.drawInt(black, 2, 7, 1);
-	Motor.A.stop();
-	Motor.B.stop();
     }
     public void turn() {
-	float wheelSize = 5.6f;
-	float width = 20.1f;
-	double degrees = 90*width/wheelSize*1.4;
-
-	Motor.A.rotate((int)degrees,true);
-	Motor.B.rotate(-(int)degrees);
+	MP1.resetTachoCount();
+	controlMotor(MP1,power);
+	controlMotor(MP2,-power);
+	while (MP1.getTachoCount()<350);
+	controlMotor(MP1,0);
+	controlMotor(MP2,0);
+    }
+    public void move(int i) {
+	MP1.resetTachoCount();
+	int d = (i<0)?-1:1;
+	controlMotor(MP1,power*d);
+	controlMotor(MP2,power*d);
+	while (d*MP1.getTachoCount()<i*d);
+	controlMotor(MP1,0);
+	controlMotor(MP2,0);
     }
     public void followP() {
 	float Kp = 1f;
@@ -67,30 +71,26 @@ public class FirstDriver {
     }
     public void turnSolar() {
 	grap();
-	Motor.A.rotate(90,true);
-	Motor.B.rotate(90);
+	move(200);
 	turn();
 	turn();
-	Motor.A.rotate(-200,true);
-	Motor.B.rotate(-200);
+	move(-30);
 	release();
-	Motor.A.rotate(-330,true);
-	Motor.B.rotate(-330);
-	//  !!! RUN !!
+	move(-200);
 	grap();
-	Motor.A.rotate(4*330,true);
-	Motor.B.rotate(4*330);
+	move(2*800);
 	release();
     }
     public FirstDriver() throws Exception {
-	M3.rotateTo(-270,true);
 	LCD.drawString("green: ", 0, 0);
 	LCD.drawString("black: ", 0, 1);
 	LCD.drawString("white: ", 0, 2);
+
 	//turnSolar();
-	calibrate();
-	turn();
 	
+	calibrate();
+	move(200);
+	turn();
 	followP();
     }
     public static void main (String[] aArg) throws Exception {
