@@ -2,7 +2,7 @@ import lejos.nxt.*;
 import java.io.*;
 import java.lang.Math;
 
-public class FirstDLightS {
+public class Revert {
     private LightSensor sensor = new LightSensor(SensorPort.S1,true);
     private NXTRegulatedMotor M3 = Motor.C;
     private MotorPort MP1 = MotorPort.A, MP2 = MotorPort.B;
@@ -42,9 +42,9 @@ public class FirstDLightS {
     }
     public void turn() {
 	MP1.resetTachoCount();
-	controlMotor(MP1,power);
-	controlMotor(MP2,-power);
-	while (MP1.getTachoCount()<350);
+	controlMotor(MP1,-power);
+	controlMotor(MP2,power);
+	while (MP1.getTachoCount()>-300);
 	controlMotor(MP1,0);
 	controlMotor(MP2,0);
     }
@@ -59,14 +59,14 @@ public class FirstDLightS {
     }
     public void followP() {
 	float Kp = 1f;
-	int Tp = 60;
-	int offset = (int) ((float) white/3+ (float) black/3*2);
+	int Tp = 50;
+	int offset = (int) ((float) white/4+ (float) black/4*3);
 	//	offset = (int) (611+670)/2;
 	while (! Button.ESCAPE.isDown()) {
 	    int error = light() - offset;
 	    int Turn = (int) (Kp*error);
-	    controlMotor(MP1,(Tp+Turn));
-	    controlMotor(MP2,(Tp-Turn));
+	    controlMotor(MP1,-(Tp+Turn));
+	    controlMotor(MP2,-(Tp-Turn));
 	}
     }
     public void turnSolar() {
@@ -81,9 +81,7 @@ public class FirstDLightS {
 	move(2*800);
 	release();
     }
-    public FirstDLightS() throws Exception {
-	Datalog dl = new Datalog();
-	new Thread(dl).start();
+    public Revert() throws Exception {
 	LCD.drawString("green: ", 0, 0);
 	LCD.drawString("black: ", 0, 1);
 	LCD.drawString("white: ", 0, 2);
@@ -94,9 +92,8 @@ public class FirstDLightS {
 	move(200);
 	turn();
 	followP();
-	dl.close();
     }
     public static void main (String[] aArg) throws Exception {
-	new FirstDLightS();
+	new Revert();
     }
 }

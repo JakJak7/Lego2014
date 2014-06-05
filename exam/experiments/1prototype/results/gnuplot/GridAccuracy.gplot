@@ -17,4 +17,3 @@ plot "../GridAccuracyFollowBlack3cm.txt" using 1:2 w l title ""
 
 set output "GridAccuracyFollowBlack3cmTCross.png"
 plot "../GridAccuracyFollowBlack3cmTCross.txt" using 1:2 w l title ""
-

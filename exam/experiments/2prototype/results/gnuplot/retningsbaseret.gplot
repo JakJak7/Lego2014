@@ -1,0 +1,20 @@
+set terminal png
+set xlabel "Sample nr."
+set ylabel "Raw light value"
+set title "Lightvalues"
+
+set output "retningsbaseret_3vejs.png"
+plot "../retningsbaseret/Højre3Vej.txt" using 1:2 w l, \
+"../retningsbaseret/Mod3Vej.txt" using 1:2 w l, \
+"../retningsbaseret/Venstre3Vej.txt" using 1:2 w l
+
+set output "retningsbaseret_4vejs.png"
+plot "../retningsbaseret/Højre4Vej.txt" using 1:2 w l, \
+"../retningsbaseret/iMod4Vej.txt" using 1:2 w l, \
+"../retningsbaseret/Mod4Vej.txt" using 1:2 w l, \
+"../retningsbaseret/Væk4Vej.txt" using 1:2 w l, \
+"../retningsbaseret/Venstre4Vej.txt" using 1:2 w l
+
+
+
+
