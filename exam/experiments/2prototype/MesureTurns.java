@@ -1,23 +1,20 @@
 import lejos.nxt.*;
 import java.io.*;
-import lejos.robotics.Color;
+import java.lang.Math;
 
-public class FirstDriver {
+public class MesureTurns {
     private final LightSensor sensorF = new LightSensor(SensorPort.S1,true);
     private final LightSensor sensorB = new LightSensor(SensorPort.S2,true);
-    private final ColorSensor cs = new ColorSensor(SensorPort.S4);
-
     private final NXTRegulatedMotor M3 = Motor.C;
     private final MotorPort MP1 = MotorPort.A, MP2 = MotorPort.B;
     private final int LEFT = -1,RIGHT=1,FRONT=0,BACK=1;
     private int green = -1, black1F = 1024,black1B = 1024, white1F = -1, white1B = -1;
-    private int power = 90, black2F = 1024,black2B = 1024, white2F = -1, white2B = -1;
+    private int power = 80, black2F = 1024,black2B = 1024, white2F = -1, white2B = -1;
 
 
     public int light(int end) {
 	return ((end == FRONT)?sensorF:sensorB).readNormalizedValue();
     }
-
     public void grap() {
 	M3.rotateTo(-270);
     }
@@ -28,7 +25,6 @@ public class FirstDriver {
 	if      (value > 0 ) m.controlMotor(value,1);
 	else if (value < 0 ) m.controlMotor(-1*value,2);
 	else if (value == 0) m.controlMotor(value,3); //3 stop
-	else if (value == -1) m.controlMotor(value,4); //4 float
     }
 
     public void calibrate() throws Exception {
@@ -69,7 +65,7 @@ public class FirstDriver {
 	MP1.resetTachoCount();
 	controlMotor(MP1,power*direction);
 	controlMotor(MP2,-power*direction);
-	while (MP1.getTachoCount()*direction<297);
+	while (MP1.getTachoCount()*direction<300);
 	controlMotor(MP1,0);
 	controlMotor(MP2,0);
     }
@@ -93,109 +89,49 @@ public class FirstDriver {
 	    controlMotor(MP2,-((Tp+Turn)));
 	}
     }
-    int ru = 0;
-    public int determineColor() {
-	ColorSensor.Color raw = cs.getRawColor();
-	int red = raw.getRed();
-	int green = raw.getGreen();
-	int blue = raw.getBlue();
-	if (valval-green > 70)
-	    return 1;
-	else 
-	    return -1;
-    }
 
-    public void followP(int direction) throws Exception {
+    public void followP() {
 	float Kp = 1f;
-	int Tp = 80;
+	int Tp = 60;
 	int offset = (int) (white1F/8+black1F/8*7);
-	if (direction == BACK)
-	    offset = (int) (white1B/4+black1B/4*3);
-	LCD.clear();
-	LCD.drawInt(offset,0,0);
-
 	while (!Button.ESCAPE.isDown()) {
 	    int error = light(FRONT) - offset;
 	    int Turn = (int) (Kp*error);
-	    controlMotor(MP1,(Tp+Turn));
-	    controlMotor(MP2,(Tp-Turn));
-	    if (determineColor() > 0) {
-		controlMotor(MP1,0);
-		controlMotor(MP2,0);
-		Thread.sleep(100);
-		break;
-
-	    }
-
-	    if (light(FRONT) < offset) {
-		if (ru == 0 && light(FRONT) < offset - 30) 
-		    break;
-		else if (ru == 1 && light(FRONT) < offset - 15) 
-		    break;
-	    }
-
-	}
-	ru++;
-    }
-
-    public int abs(int i){return (i<0)?-i:i;}
-    public int sign(int i){return (i<0)?-1:1;}
-    public void allign(int direction) throws Exception {
-	int offset = (int) (white1F/8+black1F/8*7);
-	int maxPower = 50, minPower = 40;
-	while (!Button.ESCAPE.isDown()) {
-	    int error = light(FRONT) - offset;
-	    if (abs(error) > maxPower) 
-		error = maxPower*sign(error);
-	    else if (abs(error) < minPower) 
-		error = minPower*sign(error);
-	    
-	    controlMotor(MP1,error);
-	    controlMotor(MP2,-error);
-	    LCD.drawInt(error, 0, 1);
-	    if (light(FRONT)== offset)
-		break;
+	    controlMotor(MP1,(Tp-Turn));
+	    controlMotor(MP2,(Tp+Turn));
 	}
     }
+
     public void turnSolar() {
 	grap();
 	move(200);
 	turn(LEFT);
 	turn(LEFT);
-	move(-50);
+	move(-30);
 	release();
 	move(-200);
 	grap();
 	move(2*800);
 	release();
     }
-    private Datalog dl;
-    int valval = -2;
-    public FirstDriver() throws Exception {
-	cs.setFloodlight(Color.WHITE);
-	ColorSensor.Color raw = cs.getRawColor();
+    public MesureTurns() throws Exception {
 	LCD.drawString("green: ", 0, 0);
 	LCD.drawString("black: ", 0, 1);
 	LCD.drawString("white: ", 0, 2);
+
 	calibrate();
 	move(-80);
 	turn(LEFT);
-	followP(FRONT);
-	valval = cs.getRawLightValue();
-	move(240);
-	turn(RIGHT);
-	followP(BACK);
-	move(240);
-	turn(LEFT);
-	followP(FRONT);
-	//	allign(FRONT);
-	LCD.drawString("FUUUUUUUUUUUUUUUCK: ", 0, 2);
-	//	power=40;
-	//move(165);
-	//power = 80;
+	Datalog dl = new Datalog();
+	new Thread(dl).start();
+
+	followP();
+	
 	//turnSolar();
+	dl.close();	
+
     }
     public static void main (String[] aArg) throws Exception {
-	new FirstDriver();
+	new MesureTurns();
     }
 }

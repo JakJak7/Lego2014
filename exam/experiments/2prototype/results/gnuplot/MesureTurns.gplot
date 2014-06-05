@@ -1,0 +1,9 @@
+set terminal png
+set xlabel "Sample nr."
+set ylabel "Raw light value"
+set title "Lightvalues"
+
+set output "MesureTurns.png"
+plot "../MesureTurns.txt" using 1:2 w l
+
+
