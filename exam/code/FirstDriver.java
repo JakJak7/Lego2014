@@ -156,7 +156,7 @@ public class FirstDriver {
 	    controlMotor(MP1,(Tp+Turn));
 	    controlMotor(MP2,(Tp-Turn));
 	    int l = determineColor();
-	    if (l > -1) {
+	    if (ru == 1 && l > -1) {
 		controlMotor(MP1,0);
 		controlMotor(MP2,0);
 		break;
@@ -165,10 +165,9 @@ public class FirstDriver {
 	    if (light(FRONT) < offset)
 		if (ru == 0 && light(FRONT) < offset - 30) 
 		    break;
-		else if (ru == 1 && light(FRONT) < offset - 10) 
+		else if (ru == 2 && light(FRONT) < offset - 10) 
 		    break;
 	}
-	ru++;
     }
 
     public int abs(int i){return (i<0)?-i:i;}
@@ -224,9 +223,11 @@ public class FirstDriver {
 	move(285);
 	turn(LEFT);
 	move(-250);
+	ru = 1;
 	followP(FRONT);
 
 	int i = 0;
+
 	while (true) {
 	    if (determineColor() == 2) {//turn solar
 		release(false);
@@ -276,8 +277,8 @@ public class FirstDriver {
 	move(-100);
 	followP(FRONT);
 	pass();
+	ru=0;
 	power=70;
-	ru = 1;
 	followP(FRONT);
 	move(285);
 	turn(RIGHT);
@@ -291,19 +292,20 @@ public class FirstDriver {
 	power=50;
 	move(285);
 	turn(LEFT);
+	ru=2;
 	followP(BACK);
 	release(false);
 	move(-400);
 	turn(LEFT);
 	turn(LEFT);
 	smallturn(LEFT);
+	ru = 1;
 	followP(FRONT);
 	approach();
 	grab(false);
 	move(-400);
 	ruu=1;
 	followP_BACK();
-	turn(RIGHT);
 	turn(RIGHT);
 	ru=0;
 	followP(FRONT);
