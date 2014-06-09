@@ -1,0 +1,138 @@
+.
+./.git
+./.git/config
+./.git/description
+./.git/HEAD
+./.git/hooks
+./.git/hooks/applypatch-msg.sample
+./.git/hooks/commit-msg.sample
+./.git/hooks/post-update.sample
+./.git/hooks/pre-applypatch.sample
+./.git/hooks/pre-commit.sample
+./.git/hooks/pre-rebase.sample
+./.git/hooks/prepare-commit-msg.sample
+./.git/hooks/update.sample
+./.git/index
+./.git/info
+./.git/info/exclude
+./.git/logs
+./.git/logs/HEAD
+./.git/logs/refs
+./.git/logs/refs/heads
+./.git/logs/refs/heads/master
+./.git/objects
+./.git/objects/info
+./.git/objects/pack
+./.git/objects/pack/pack-a6f2eeae34651efed4f5142902d370279c61d5e6.idx
+./.git/objects/pack/pack-a6f2eeae34651efed4f5142902d370279c61d5e6.pack
+./.git/packed-refs
+./.git/refs
+./.git/refs/heads
+./.git/refs/heads/master
+./.git/refs/remotes
+./.git/refs/remotes/origin
+./.git/refs/remotes/origin/HEAD
+./.git/refs/tags
+./grep
+./week2
+./week2/code
+./week2/code/DataLogger.java
+./week2/code/LineFollower_1_0.java
+./week2/code/LineFollower_1_2.java
+./week2/code/LineFollower_1_3.java
+./week2/code/LineFollower_1_4.java
+./week2/code/SLineFollower.java
+./week2/images
+./week2/images/2014-02-06 12.39.34.jpg
+./week2/images/2014-02-06 12.39.45.jpg
+./week2/images/2014-02-06 12.40.14.jpg
+./week2/images/2014-02-06 12.40.20.jpg
+./week2/images/2014-02-06 12.40.28.jpg
+./week2/images/2014-02-06 12.40.35.jpg
+./week2/images/2014-02-06 12.42.22.jpg
+./week2/images/2014-02-06 12.42.40.jpg
+./week2/images/2014-02-06 12.43.13.jpg
+./week2/images/2014-02-06 12.55.01.jpg
+./week2/images/2014-02-06 12.55.07.jpg
+./week2/images/2014-02-06 12.55.12.jpg
+./week2/images/2014-02-06 12.55.20.jpg
+./week2/images/2014-02-06 12.57.10.jpg
+./week2/images/2014-02-06 12.57.18.jpg
+./week2/images/2014-02-06 12.57.24.jpg
+./week2/images/2014-02-06 12.59.04.jpg
+./week2/images/2014-02-06 12.59.28.jpg
+./week2/images/2014-02-06 12.59.42.jpg
+./week2/images/sample10.png
+./week2/images/sample100.png
+./week2/images/sample1000.png
+./week2/images/sample500.png
+./week2/images/sampleall.png
+./week2/images/thumbnails
+./week2/images/thumbnails/2014-02-06 12.40.28s.jpg
+./week2/images/thumbnails/2014-02-06 12.42.40s.jpg
+./week2/logbog
+./week2/sample_light
+./week2/sample_light/gnuplot.plt
+./week2/sample_light/sample10.png
+./week2/sample_light/sample100.png
+./week2/sample_light/sample1000.png
+./week2/sample_light/sample500.png
+./week2/sample_light/sampleall.png
+./week2/sample_light/Sample_1000ms.txt
+./week2/sample_light/Sample_100ms.txt
+./week2/sample_light/Sample_10ms.txt
+./week2/sample_light/Sample_500ms.txt
+./week2/week2.pdf
+./week3
+./week3/code
+./week3/code/Car.java
+./week3/code/DataLogger.java
+./week3/code/SonicSensorTest.java
+./week3/code/Tracker.java
+./week3/code/TrackerLogging.java
+./week3/code/TrackerPID.java
+./week3/code/WallFollower.java
+./week3/images
+./week3/images/Exercise3_100ms.png
+./week3/images/Exercise4_original.png
+./week3/images/Exercise4_tweaked.png
+./week3/images/Exercise5.png
+./week3/images/Exercise5_v2.png
+./week3/images/Exercise6_nqc.png
+./week3/images/fit.log
+./week3/images/gnuplot.gnu
+./week3/sample
+./week3/sample/Exercise4_0.3_gain.txt
+./week3/sample/Exercise4_1.0_gain.txt
+./week3/sample/Exercise4_original.txt
+./week3/sample/Exercise4_tweaked.txt
+./week3/sample/Exercise5.txt
+./week3/sample/Exercise5_v2.txt
+./week3/sample/Exercise6_nqc.txt
+./week3/sample/Sample_100ms.txt
+./week3/sample/Sample_1ms.txt
+./week3/sample/Sample_30.txt
+./week3/sample/Sample_5ms.txt
+./week3/sample/Sample_logging_and_display_updating.txt
+./week3/sample/Sample_measuring_and_logging_no_display.txt
+./week3/sample/Sample_measuring_disabled.txt
+./week3/sample/Sample_measuring_disabled_v2.txt
+./week3/sample/Sample_measuring_disabled_v3.txt
+./week4
+./week4/code
+./week4/code/DataLogger.java
+./week4/code/e1_SoundSensor.java
+./week4/code/SoundSensorTest.java
+./week4/images
+./week4/images/gnuplot.gnu
+./week4/images/w4.ex1.hej.png
+./week4/images/w4.ex1.klap.png
+./week4/images/w4.ex1.knips.png
+./week4/images/w4.ex1.mobil.png
+./week4/images/w4.ex1.testsample.png
+./week4/samples
+./week4/samples/w4.ex1.hej.s
+./week4/samples/w4.ex1.klap.s
+./week4/samples/w4.ex1.knips.s
+./week4/samples/w4.ex1.mobil.s
+./week4/samples/w4.ex1.test.sample.sound.s
