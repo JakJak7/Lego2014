@@ -150,6 +150,7 @@ public class FirstDriver {
 	if (direction == BACK)
 	    offset = (int) (white1B/4+black1B/4*3);
 	
+	int bb = 0;
 	while (!Button.ESCAPE.isDown()) {
 	    int error = light(FRONT) - offset;
 	    int Turn = (int) (Kp*error);
@@ -167,6 +168,14 @@ public class FirstDriver {
 		    break;
 		else if (ru == 2 && light(FRONT) < offset - 10) 
 		    break;
+	    if (bb == 0 && light(FRONT) > offset)
+		bb = 1;
+	    else if (bb == 1 && light(FRONT) < offset)
+		bb = 2;
+	    
+	    if (bb == 2 && ru == 3 && light(FRONT) > offset + 5) 
+		break;
+
 	}
     }
 
@@ -199,10 +208,9 @@ public class FirstDriver {
 	ColorSensor.Color raw = cs.getRawColor();
 	ColorSensor.Color raw2 = cs2.getRawColor();
 
-	/*	
-
+	/*
+	new Thread(dl).start();
 	dl.close();
-
 	*/
 	//# Calibrate
 	calibrate();
@@ -277,16 +285,17 @@ public class FirstDriver {
 	move(-100);
 	followP(FRONT);
 	pass();
-	ru=0;
+	ru=2;
 	power=70;
 	followP(FRONT);
 	move(285);
 	turn(RIGHT);
-	ru=0;
 	followP(FRONT);
 	move(285);
 	turn(LEFT);
+	ru=0;
 	power=100;
+
 	ru=0;
 	followP(FRONT);
 	power=50;
@@ -308,7 +317,29 @@ public class FirstDriver {
 	followP_BACK();
 	turn(RIGHT);
 	ru=0;
+	power=100;
+	release(true);
 	followP(FRONT);
+	grab(true);
+	power=70;
+	move(285);
+	turn(RIGHT);
+	followP(BACK);
+	power=50;
+	move(285);
+	turn(LEFT);
+	move(-250);
+	ru = 1;
+	followP(FRONT);
+	pass();
+	ru=3;
+	followP(FRONT);
+	Sound.beep();
+	controlMotor(MP1,0);
+	controlMotor(MP2,0);
+	move(273);
+	release(false);
+
     }
 
     public static void main (String[] aArg) throws Exception {
