@@ -5,8 +5,8 @@ import lejos.robotics.Color;
 public class FirstDriver {
     private final LightSensor sensorF = new LightSensor(SensorPort.S1,true);
     private final LightSensor sensorB = new LightSensor(SensorPort.S2,true);
-    private final LightSensor sensorL = new LightSensor(SensorPort.S3,true);
-    private final ColorSensor cs = new ColorSensor(SensorPort.S4);
+    private final ColorSensor cs = new ColorSensor(SensorPort.S3);
+    private final ColorSensor cs2 = new ColorSensor(SensorPort.S4);
 
     private final NXTRegulatedMotor M3 = Motor.C;
     private final MotorPort MP1 = MotorPort.A, MP2 = MotorPort.B;
@@ -19,7 +19,7 @@ public class FirstDriver {
 	return ((end == FRONT)?sensorF:sensorB).readNormalizedValue();
     }
 
-    public void grap(boolean f) {
+    public void grab(boolean f) {
 	M3.rotateTo(-270,f);
     }
     public void release(boolean f) {
@@ -33,14 +33,14 @@ public class FirstDriver {
     }
 
     public void calibrate() throws Exception {
-	grap(true);
+	grab(true);
 	controlMotor(MP1,power);
 	controlMotor(MP2,power);
 	green = light(FRONT);
 	while (light(FRONT) < green+40);
 	Thread.sleep(100);
 	white1F = light(FRONT); // 1 FRONT WHITE
-	while (light(FRONT) > white1F-40);
+	while (light(FRONT) > white1F-30);
 	while (light(FRONT) < white1F-20) // 1 FRONT BLACK
 	    black1F = (light(FRONT) < black1F)?light(FRONT):black1F;
 	white2F = light(BACK); // 2 FRONT WHITE
@@ -53,7 +53,7 @@ public class FirstDriver {
 	white2B = light(BACK); // 2 WHITE BACK
 	controlMotor(MP1,-power);
 	controlMotor(MP2,-power);
-	while (light(FRONT) > white1B-40);
+	while (light(FRONT) > white1B-30);
 	while (light(FRONT) < white1B-20) // 1 BLACK BACK
 	    black1B = (light(FRONT) < black1B)?light(FRONT):black1B;
 	controlMotor(MP1,power);
@@ -66,7 +66,16 @@ public class FirstDriver {
 	MP1.resetTachoCount();
 	controlMotor(MP1,power*direction);
 	controlMotor(MP2,-power*direction);
-	while (MP1.getTachoCount()*direction<320);
+	while (MP1.getTachoCount()*direction<319);
+	controlMotor(MP1,0);
+	controlMotor(MP2,0);
+    }
+
+    public void smallturn(int direction) {
+	MP1.resetTachoCount();
+	controlMotor(MP1,power*direction);
+	controlMotor(MP2,-power*direction);
+	while (MP1.getTachoCount()*direction<50);
 	controlMotor(MP1,0);
 	controlMotor(MP2,0);
     }
@@ -79,37 +88,65 @@ public class FirstDriver {
 	controlMotor(MP1,0);
 	controlMotor(MP2,0);
     }
-    public void followP_BACK() {
-	float Kp = 1f;
-	int Tp = 50;
-	int offset = (int) (white2B/5+black2B/5*4);
-	while (!Button.ESCAPE.isDown()) {
-	    int error = light(BACK) - offset;
-	    int Turn = (int) (Kp*error);
-	    controlMotor(MP1,-((Tp-Turn)));
-	    controlMotor(MP2,-((Tp+Turn)));
-	}
-    }
     int ru = 0;
     public int determineColor() {
 	ColorSensor.Color raw = cs.getRawColor();
 	int red = raw.getRed();
 	int green = raw.getGreen();
 	int blue = raw.getBlue();
-	if (valval-green > 80)
-	    return 0; // Black
-	else if (red-green > 10)
+	if (red-green > 5)
 	    return 1; // Red
-	else if (blue-green > 10) 
+	else if (blue-green > 5) 
 	    return 2; // Blue
+	else if (valval-green > 120)
+	    return 0; // Black
 	else
 	    return -1;
+    }
+    public int determineColor2() {
+	ColorSensor.Color raw = cs2.getRawColor();
+	int red = raw.getRed();
+	int green = raw.getGreen();
+	int blue = raw.getBlue();
+	if (red-green > 5)
+	    return 1; // Red
+	else if (blue-green > 5) 
+	    return 2; // Blue
+	else if (valval-green > 120)
+	    return 0; // Black
+	else
+	    return -1;
+    }
+    int ruu = 0;
+    public void followP_BACK() {
+	float Kp = 1f;
+	int Tp = 40;
+	int offset = (int) (white2B/5+black2B/5*4);
+	boolean bo = false;
+	while (!Button.ESCAPE.isDown()) {
+	    int l = determineColor2();
+	    if (l > -1) {
+		controlMotor(MP1,0);
+		controlMotor(MP2,0);
+		break;
+	    }
+	    if (ruu == 1 && light(BACK) > offset)
+		bo = true;
+	    if (bo && ruu == 1 && light(BACK) < offset-20)
+		break;
+
+	    int error = light(BACK) - offset;
+	    int Turn = (int) (Kp*error);
+	    controlMotor(MP1,-((Tp-Turn)));
+	    controlMotor(MP2,-((Tp+Turn)));
+	}
     }
 
     public void followP(int direction) throws Exception {
 	float Kp = 1f;
 	int Tp = power;
 	int offset = (int) (white1F/8+black1F/8*7);
+	LCD.drawInt(offset,0,0);
 	if (direction == BACK)
 	    offset = (int) (white1B/4+black1B/4*3);
 	
@@ -118,14 +155,15 @@ public class FirstDriver {
 	    int Turn = (int) (Kp*error);
 	    controlMotor(MP1,(Tp+Turn));
 	    controlMotor(MP2,(Tp-Turn));
-	    if (determineColor() > -1) {
+	    int l = determineColor();
+	    if (l > -1) {
 		controlMotor(MP1,0);
 		controlMotor(MP2,0);
 		break;
 	    }
 
 	    if (light(FRONT) < offset)
-		if (ru == 0 && light(FRONT) < offset - 40) 
+		if (ru == 0 && light(FRONT) < offset - 30) 
 		    break;
 		else if (ru == 1 && light(FRONT) < offset - 10) 
 		    break;
@@ -136,7 +174,7 @@ public class FirstDriver {
     public int abs(int i){return (i<0)?-i:i;}
     public int sign(int i){return (i<0)?-1:1;}
     public void turnSolar() {
-	grap(false);
+	grab(false);
 	turn(LEFT);
 	turn(LEFT);
 	move(-315);
@@ -144,9 +182,10 @@ public class FirstDriver {
     }
     private Datalog dl = new Datalog();;
     int valval = -2;
+    int valval2 = -2;
     public void approach() {
-	power=70;
-	move(180);
+	power=50;
+	move(140);
 	power=40;
 	move(80);
 	power=70;
@@ -156,11 +195,16 @@ public class FirstDriver {
 	M3.setSpeed(720);
 	cs.setFloodlight(false);
 	cs.setFloodlight(Color.WHITE);
+	cs2.setFloodlight(false);
+	cs2.setFloodlight(Color.WHITE);
 	ColorSensor.Color raw = cs.getRawColor();
+	ColorSensor.Color raw2 = cs2.getRawColor();
 
-	//new Thread(dl).start();
-	//dl.close();
+	/*	
 
+	dl.close();
+
+	*/
 	//# Calibrate
 	calibrate();
 	move(-80);
@@ -169,41 +213,102 @@ public class FirstDriver {
 	//# Go out into space
 	followP(FRONT);
 	valval = cs.getRawLightValue();
+	valval2 = cs2.getRawLightValue();
 	move(260);
 
 	power=70;
 	turn(RIGHT);
 
 	followP(BACK);
+	power=50;
 	move(285);
 	turn(LEFT);
 	move(-250);
 	followP(FRONT);
-	release(true);
 
-	move(-350);
-	followP(FRONT);
-	//# Approach 
-	approach();
-	
-	turnSolar();
+	int i = 0;
+	while (true) {
+	    if (determineColor() == 2) {//turn solar
+		release(false);
+		//# Approach 
+		approach();
+		turnSolar();
+		break;
+	    }
+	    else if (determineColor() == 1) {// pass by
+		i++;
+		if (i == 3)  {
+		    controlMotor(MP1,-80);
+		    controlMotor(MP2,-80);
+		    Thread.sleep(800);
+		    followP_BACK();
+		    controlMotor(MP1,-80);
+		    controlMotor(MP2,-80);
+		    Thread.sleep(800);
+		    followP_BACK();
 
+		    break;
+		}
+		else {
+		    move(300);
+		    followP(FRONT);
+		}
+	    }
+	    else if (determineColor() == 0) {//return defect
+		switche();
+		break;
+	    }
+	}
 
-	controlMotor(MP1,-80);
-	controlMotor(MP2,-80);
-
-
-	Thread.sleep(450);
-	controlMotor(MP1,0);
-	controlMotor(MP2,0);
-	grap(false);
-
-	controlMotor(MP1,100);
-	controlMotor(MP2,100);
-	Thread.sleep(500);
-	release(true);
-	Thread.sleep(1500);
+	//*/
     }
+    public void pass() {
+	move(300);
+    }
+    public void switche() throws Exception{
+	power=40;
+	release(false);
+	approach();
+	power=40;
+	grab(false);
+	turn(LEFT);
+	turn(LEFT);
+	move(-100);
+	followP(FRONT);
+	pass();
+	power=70;
+	ru = 1;
+	followP(FRONT);
+	move(285);
+	turn(RIGHT);
+	ru=0;
+	followP(FRONT);
+	move(285);
+	turn(LEFT);
+	power=100;
+	ru=0;
+	followP(FRONT);
+	power=50;
+	move(285);
+	turn(LEFT);
+	followP(BACK);
+	release(false);
+	move(-400);
+	turn(LEFT);
+	turn(LEFT);
+	smallturn(LEFT);
+	followP(FRONT);
+	approach();
+	grab(false);
+	move(-400);
+	ruu=1;
+	followP_BACK();
+	turn(RIGHT);
+	turn(RIGHT);
+	ru=0;
+	followP(FRONT);
+    }
+
     public static void main (String[] aArg) throws Exception {
 	new FirstDriver();
     }
