@@ -1,9 +1,8 @@
 public class Drive {
     private Move m;
     private Navigator n;
-    private final int LEFT=-1,RIGHT=1,FRONT=0,BACK=1;
 
-    public void solarTask() throws Exception{
+    public void solarTask() {
 	int i = m.getColor();
 	if (i == 0)//return defect
 	    n.switche();
@@ -12,7 +11,7 @@ public class Drive {
 	else if (i == 2) //turn solar
 	    n.turnSolar();
     }
-    public Drive() throws Exception {
+    public Drive() {
 	m = new Move();
 	n = new Navigator(m);
 
@@ -20,13 +19,13 @@ public class Drive {
 	m.calibrate();
 	
 	//# Go out into space
-	for (int i=1;i<=3;i++) {
+	for (int i=1;i<=1;i++) {
 	    n.navigateTo(i);
 	    solarTask();
 	}
     }
 
-    public static void main (String[] aArg) throws Exception {
+    public static void main (String[] aArg){
 	new Drive();
     }
 }
