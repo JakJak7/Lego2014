@@ -16,10 +16,13 @@ public class Move {
 	ordinaroffset2 =-1;
 
     public void turn(int direction) { // turn with tacho
+	int powerbuff = power;
+	setPower(70);
 	MP1.resetTachoCount();
 	controlMotor(power*direction,-power*direction);
-	while (MP1.getTachoCount()*direction<324);
+	while (MP1.getTachoCount()*direction<290);
 	controlMotor(0,0);
+	setPower(powerbuff);
     }
     public void move(int i) {
 	MP1.resetTachoCount();
@@ -30,35 +33,47 @@ public class Move {
 	controlMotor(MP1,0);
 	controlMotor(MP2,0);
     }
-    public void pass() {move(300);}
+    public void pass() {move(330);}
     public void setPower(int power) {this.power = power;}
     public int getColor() {
 	return lastColor;
     }
+    public boolean dummy = true;
     public void followP(int direction, int terminate){
 	float Kp = 1f;
 	int Tp = power;
 
 	int offset = ordinaroffset;
 	if (direction == SHADOW)
-	    offset = (int) (white1B/4+black1B/4*3);
+	    offset = (int) (white1B/2+black1B/2);
 	
 	int bb = 0;
+	int colorterminate = 0;
 	while (!Button.ESCAPE.isDown()) {
 	    int error = light(FRONT) - offset;
 	    int Turn = (int) (Kp*error);
-	    controlMotor(MP1,(Tp+Turn));
-	    controlMotor(MP2,(Tp-Turn));
+	    if (dummy) {
+		controlMotor(MP1,(Tp+Turn));
+		controlMotor(MP2,(Tp-Turn));
+	    }
+	    else {
+		controlMotor(MP1,(Tp-Turn));
+		controlMotor(MP2,(Tp+Turn));
+	    }
 	    lastColor = determineColor();
 	    if (terminate == 1 && lastColor > -1) {
+		if (colorterminate < 10) {
+		    colorterminate++;
+		    continue;
+		}
 		controlMotor(MP1,0);
 		controlMotor(MP2,0);
 		break;
 	    }
-	    
+	    colorterminate=0;
 	    if (terminate == 4 && light(BACK) < ordinaroffset2 - 20) 
 		break;
-	    if (terminate == 0 && light(FRONT) < offset - 40) 
+	    if (terminate == 0 && light(FRONT) < offset - 35) 
 		break;
 	    else if (terminate == 2 && light(FRONT) < offset - 10) 
 		break;
@@ -67,31 +82,50 @@ public class Move {
 		    bb = 1;
 		else if (bb == 1 && light(FRONT) < offset)
 		    bb = 2;
-		if (bb == 2 && light(FRONT) > offset + 5) 
+		else if (bb == 2 && light(FRONT) > offset)
+		    bb = 3;
+		else if (bb ==3 && light(FRONT) > offset + 5) 
 		    break;
 	    }
 	}
     }
     private void approach() {
-	//	power=50;
-	move(160);
-	//power=40;
-	move(90);
-	//power=40;
+	move(230);
     }
     public void turnSolar() {
 	release(false);
 	approach();
 	move(100);
-	grab(false);
+	grab(true);
+	//align(RIGHT,true);
 	turn(LEFT);
 	turn(LEFT);
-	move(-195);
+	//align2(RIGHT,true);
+	move(-180);
 	release(false);
 	move(-200);
 	grab(false);
     }
-
+    public void align2(int direction, boolean b) {
+	int pp = 30;
+	controlMotor(pp*direction,-pp*direction);
+	while(light(FRONT) > ordinaroffset2);
+	controlMotor(-pp*direction,pp*direction);
+	while(light(FRONT) < ordinaroffset2);
+	controlMotor(0,0);
+	if (b) 
+	    sleep(200);
+    }
+    public void align(int direction, boolean b) {
+	int pp = 30;
+	controlMotor(pp*direction,-pp*direction);
+	while(light(FRONT) > ordinaroffset);
+	controlMotor(-pp*direction,pp*direction);
+	while(light(FRONT) < ordinaroffset);
+	controlMotor(0,0);
+	if (b) 
+	    sleep(200);
+    }
     public void setColorSensorMaxValue() {
 	colorSensorMaxValue1 = cs1.getRawLightValue();
 	colorSensorMaxValue2 = cs2.getRawLightValue();
@@ -134,8 +168,8 @@ public class Move {
 	    black2B = (light(BACK) < black2B)?light(BACK):black2B;
 	move(-80);
 	turn(LEFT);
-	ordinaroffset = (int) (white1F+black1F)/2;
-	ordinaroffset2 = (int) (white2F+black2F)/2;
+	ordinaroffset = (int) (white1F/4+black1F/4*3);
+	ordinaroffset2 = (int) (white2F/2+black2F/2);
     }
 
     public void switche() {}
@@ -147,15 +181,15 @@ public class Move {
 	cs2.setFloodlight(Color.WHITE);
     }
     
-    private void controlMotor(MotorPort m, int value) {
+    public void controlMotor(MotorPort m, int value) {
 	if      (value > 0 ) m.controlMotor(value,1);
 	else if (value < 0 ) m.controlMotor(-1*value,2);
 	else if (value == 0) m.controlMotor(value,3); //3 stop
 	else if (value == -1) m.controlMotor(value,4); //4 float
     }
-    private void sleep(int i) {try {Thread.sleep(i);}catch (Exception e){}}
+    public void sleep(int i) {try {Thread.sleep(i);}catch (Exception e){}}
     private int light(int end) {return ((end == LIGHT)?sensorF:sensorB).readNormalizedValue();}
-    private void controlMotor(int value1, int value2) {
+    public void controlMotor(int value1, int value2) {
 	controlMotor(MP1,value1);
 	controlMotor(MP2,value2);
     }
