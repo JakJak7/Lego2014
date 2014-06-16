@@ -21,7 +21,7 @@ public class Drive {
 	//# Go out into space
 	for (int i=1;i<=1;i++) {
 	    n.navigateTo(i);
-	    solarTask();
+	    //solarTask();
 	}
     }
 
