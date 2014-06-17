@@ -41,7 +41,7 @@ public class Move {
     public boolean dummy = true;
     public void followP(int direction, int terminate){
 	float Kp = 1f;
-	int Tp = power;
+	int Tp = 40;
 
 	//	offsetFrontLight,offsetFrontShadow,offseBackLight,offseBackShadow;
 	int offset = offsetFrontLight;
@@ -52,7 +52,6 @@ public class Move {
 	int colorterminate = 0;
 	boolean overunder = false;
 	int overunderstate = 0;
-	int lightvalueback=-1;
 	while (!Button.ESCAPE.isDown()) {
 	    //# Pcontrol
 	    int error = light(FRONT) - offset;
@@ -69,24 +68,30 @@ public class Move {
 		}
 		else if (overunderstate == 1 && (light(FRONT) < offset))
 		    overunderstate = 2;
-		else if (overunderstate == 2 && (light(FRONT) > offset))
+		else if (overunderstate == 2 && (light(FRONT) > offset)) {
 		    overunder = true;
+		    Sound.beep();
+		    Tp=power;
+		}
 
 	    //# Termineringer
 	    // color
 	    lastColor = determineColor();
-	    if (terminate == tCOLOR && lastColor > -1) {
-		if (colorterminate < 10) {
-		    colorterminate++;
-		    continue;
-		}
-		controlMotor(0,0);
-		break;
-	    } colorterminate=0;
+	    if (terminate == tCOLOR) {
+		Tp=60;
+		if (lastColor > -1) {
+		    if (colorterminate < 10) {
+			colorterminate++;
+			continue;
+		    }
+		    controlMotor(0,0);
+		    break;
+		} colorterminate=0;
+	    }
 	    
 	    if (terminate == tFRONT && overunder)
-		if (light(FRONT) < offset - 25) {
-		    if (bb > 3)  break;
+		if (light(FRONT) < offset - 20) {
+		    if (bb > 2)  break;
 		    bb++;
 		    continue;
 		}
@@ -100,45 +105,76 @@ public class Move {
     private void approach() {
 	move(230);
     }
-    public void turnSolar() {
+    public void grapSolar() {
 	setPower(40);
 	release(false);
 	approach();
 	move(100);
 	grab(true);
-	//align(RIGHT,true);
+    }
+    public void turnSolar() {
+	grapSolar();
 	turn(LEFT);
 	turn(LEFT);
-	//align2(RIGHT,true);
 	move(-180);
 	release(false);
 	move(-200);
 	grab(false);
     }
 
-    /*    public void align(int direction, boolean b) {
-	int pp = 30;
-	controlMotor(pp*direction,-pp*direction);
-	while(light(FRONT) > ordinaroffset);
-	controlMotor(-pp*direction,pp*direction);
-	while(light(FRONT) < ordinaroffset);
-	controlMotor(0,0);
-	if (b) 
-	    sleep(200);
-    }
-    */
     public void setColorSensorMaxValue() {
 	colorSensorMaxValue1 = cs1.getRawLightValue();
 	colorSensorMaxValue2 = cs2.getRawLightValue();
     }
-    public void revertColor() {
-	if (lastColor == 1)
-	    lastColor = 2;
-	else if(lastColor == 2)
-	    lastColor = 1;
-    }
 
+    private int calibratenext(int broek) {
+	int white = light(FRONT); // 1 LIGHT WHITE
+	while (light(FRONT) > white-30);
+	int black = light(FRONT);
+	while (light(FRONT) < white-20) // 1 LIGHT BLACK
+	    black = (light(FRONT) < black)?light(FRONT):black;
+	LCD.drawInt(white,0,0,0);
+	LCD.drawInt(black,0,0,1);
+
+	return (white/broek+black/broek*(broek-1));
+    }
     public void calibrate() {
+	grab(true);
+	controlMotor(power,power);
+	int green = light(FRONT);
+	while (light(FRONT) < green+40);
+	sleep(100);
+	int offset_right = calibratenext(2);
+	LCD.drawInt(offset_right,0,0,2);
+	turn(LEFT);
+	sleep(100);
+	controlMotor(power,power);
+	int offset_down = calibratenext(2);
+	turn(LEFT);
+	sleep(100);
+	controlMotor(-power,-power);
+	int offset_left = calibratenext(2);
+	turn(LEFT);
+	sleep(100);
+	controlMotor(-power,-power);
+	int offset_up = calibratenext(2);
+	offsetFrontLight = offset_right;
+	controlMotor(0,0);
+	offsetFrontLight = offset_right;
+	move(300);
+	turn(RIGHT);
+	followP(LIGHT,tFRONT);
+
+	controlMotor(0,0);
+	sleep(300);
+	/*	
+	offsetFrontLight  = (int) (white1L/broek+black1L/broek*(broek-1));
+	offsetFrontShadow = (int) (white1S+black1S)/2;
+	offsetBackLight    = (int) (white2L+black2L)/2;
+	offsetBackShadow   = (int) (white2S+black2S)/2;
+	*/
+    }
+    public void calibrate_old() {
 	int maxblack = 1024;
 	grab(true);
 	controlMotor(power,power);
@@ -169,7 +205,7 @@ public class Move {
 	while (light(BACK) < white2L-20) // 2 BLACK SHADOW
 	    black2L = (light(BACK) < black2L)?light(BACK):black2L;
 
-	int broek=5;
+	int broek=10;
 	offsetFrontLight  = (int) (white1L/broek+black1L/broek*(broek-1));
 	offsetFrontShadow = (int) (white1S+black1S)/2;
 	offsetBackLight    = (int) (white2L+black2L)/2;
@@ -185,11 +221,11 @@ public class Move {
 	controlMotor(-power*direction,power*direction);
 	int offset = (light == LIGHT)?offsetFrontLight:offsetFrontShadow;
 	while (light(FRONT) > offset);
+	controlMotor(power*direction,-power*direction);
+	while (light(FRONT) < offset);
 	controlMotor(0,0);
 	setPower(buffer);
     }
-
-    public void switche() {}
 
     public Move() {
 	//# Setup

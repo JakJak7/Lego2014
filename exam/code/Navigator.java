@@ -2,24 +2,41 @@ import lejos.nxt.*;
 
 public class Navigator {
     private Move m;
-    private int cPos = 0, cC = 0;
-    private int direction = 1; 
+    private int direction=1, grid=-1, solar=-1;
 
-    public Navigator(Move m) {
-	this.m = m;
-    }
+    public Navigator(Move m) {this.m = m;}
 
     public void turnSolar() {
 	m.turnSolar();
+	m.move(200);
+	m.align(m.LIGHT,m.LEFT);
+	if (solar != 0) {
+	    m.followP(m.LIGHT,m.tCOLOR);
+	    m.move(-400);
+	    m.followP(m.LIGHT,m.tCOLOR);
+	}
+	else
+	    m.followP(m.LIGHT,m.tFRONT);
+	m.pass();
+	m.followP(m.LIGHT,m.tFRONT);
+	m.pass();
+	m.followP(m.LIGHT,m.tFRONT);
+	m.controlMotor(0,0);
+	m.sleep(300);
+	direction*=-1;
     }
-    public void switche(){
-	m.switche();
+    public void replace(){
+	Sound.buzz();
+	m.grapSolar();
+
+	if (direction == 1) {
+	    m.turn(m.LEFT);
+	    m.turn(m.LEFT);
+	}
 	direction = 1;
     }
-    public void passSolar() {
-	m.pass();
-    }
-    private void gotoGrid(int i){
+
+    public void gotoGrid(int i){
 	if (i == 1) {
 	    m.setPower(100);
 	    m.followP(m.LIGHT,m.tFRONT);
@@ -27,81 +44,36 @@ public class Navigator {
 	    m.move(250);
 	    m.turn(m.RIGHT,70);
 	    m.align(m.SHADOW,m.LEFT);
-	    m.setPower(100);
+	    m.setPower(70);
 	    m.followP(m.SHADOW,m.tFRONT);
 	    Sound.beep();
 	    m.move(250);
 	    m.turn(m.LEFT,70);
-	    m.setPower(100);
+	    m.align(m.LIGHT,m.LEFT);
 	    m.move(-250);
-	    m.followP(m.SHADOW,m.tCOLOR);
-	    m.move(-500);
+	    m.followP(m.LIGHT,m.tCOLOR);
+	    m.move(-400);
 	}
     }
-    private void lala() {
-	m.followP(m.LIGHT,1);
-	m.move(-200);
-	m.followP(m.LIGHT,1);
-    }
-    private void lala2() {
-	m.followP(m.SHADOW,1);
-	m.move(-200);
-	m.followP(m.SHADOW,1);
-    }
-    public void navigateTo(int pos){
-	gotoGrid(1);
+
+    public void fixRow() {
+	//1. Drive to the end of the row and remember the states of the solarpannels
 	m.followP(m.LIGHT,m.tCOLOR);
-	m.controlMotor(0,0);
-	m.sleep(500);
-	m.turnSolar();
-	/*	lala();
-	Sound.beep();
-	m.pass();
-	lala();
-	Sound.beep();
-	m.pass();
-	lala();
-	Sound.beep();
-	turnSolar();
-	
-	m.followP(m.SHADOW,1);
-
-	m.pass();
-	lala2();
-	Sound.beep();
-	m.pass();
-	lala2();
-	Sound.beep();
-	turnSolar();
-
-	lala();
-	m.pass();
-	lala();
-	Sound.beep();
-	turnSolar();
-
-	lala2();
-	m.pass();
-	m.followP(m.SHADOW,2);
-	Sound.buzz();
-	/*	m.pass();
-	m.followP(m.LIGHT,2);
-	Sound.beep();
-	m.setPower(40);
-	m.followP(m.LIGHT,4);
-	m.turn(m.RIGHT);
-	/*
-	cC = pos;
-	if (cPos == 0 && pos == 1)//at home..
-	    gotoGrid(1);
-
-	if (pos == 1) {
-	    lala();
-	}	
-	else if (pos == 2 || pos == 3) {
-	    m.pass();
-	    lala();
+	int[] s = new int[3];
+	for (solar = 0;solar<=2;solar++) {
+	    s[solar] = m.getColor();
+	    if (solar < 2) {
+		m.pass();
+		m.followP(m.LIGHT,m.tCOLOR);
+	    }	    
 	}
-	*/
+
+	if (s[2] == 1)
+	    m.move(-500);
+	else if (s[2] == 2)
+	    turnSolar();
+	else
+	    replace();
+		
     }
 }
