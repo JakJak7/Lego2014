@@ -11,8 +11,8 @@ public class Drive {
 	m.calibrate();
 	
 	//# Go out into space
-	//	n.gotoGrid(1);
-	//n.fixRow();
+	n.gotoGrid(1);
+	n.fixRow();
 
     }
 
