@@ -17,7 +17,8 @@ public class Datalog implements Runnable {
     public void run() {
 	int i =0;
 	while (!Button.ESCAPE.isDown() && runner) {
-	    writeS(i+"\t"+sample.readNormalizedValue()+extra+"\n");
+	    if (false)
+		writeS(i+"\t"+sample.readNormalizedValue()+extra+"\n");
 	    i++;
 	    try {
 		Thread.sleep(10);

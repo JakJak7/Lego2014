@@ -16,7 +16,7 @@ public class Navigator {
 	//# Grap and RUN
 	m.grapSolar();
 	m.turnsolar();
-	//m.align(m.DOWN,m.RIGHT);
+	m.align(m.DOWN,m.RIGHT);
 	for (int i=solar;i>=0;i--)
 	    if (i == 0)
 		m.followP(m.DOWN,5);
@@ -27,13 +27,26 @@ public class Navigator {
 	if (grid == 1) {
 	    m.move(200);
 	    m.turn(m.RIGHT);
-	    m.setPower(100);
+	    m.align(m.DOWN,m.RIGHT); // DOWN? .. left??
+	    m.setPower(80);
 	    m.followP(m.LEFT,m.tFRONT);
 	    m.move(200);
 	    m.turn(m.LEFT);
+	    m.align(m.DOWN,m.RIGHT);
 	}
-	else if (grid == 2);
-    	else if (grid == 3);//m.turn(m.LEFT);
+	else if (grid == 2){
+	    m.move(90);
+	}
+    	else if (grid == 3){
+	    m.move(200);
+	    m.turn(m.LEFT,70);
+       	    m.align(m.RIGHT,m.RIGHT);
+	    m.setPower(80);
+	    m.followP(m.RIGHT,m.tFRONT);
+	    m.move(200);
+	    m.turn(m.RIGHT);
+	    m.align(m.DOWN,m.RIGHT);	    
+	}
 
 	// Get home and replace
 	m.setPower(70);
@@ -49,9 +62,9 @@ public class Navigator {
 	int reservePanels = 0;
 	if (reservePanels == 0) {
 	    m.setPower(50);
-	    m.move(250);
+	    m.release(true);
+	    m.move(190);
 
-	    m.release(false);
 	    m.move(-200);
 	    m.grab(false);
 	    m.move(200);
@@ -63,12 +76,11 @@ public class Navigator {
 	    m.turn(m.RIGHT,70);
 
 	}
-	else; //2 og 3..
-	
+	else; //2 og 3 reserve solceller
+
 	
 	m.setPower(100);
-	m.turn(m.LEFT,70);
-	m.align(m.UP,m.LEFT);
+	m.align(m.UP,m.RIGHT);
 	m.followP(m.UP,m.tFRONT);
 	gotoGrid(grid);
 	
@@ -76,10 +88,10 @@ public class Navigator {
 	    m.followP(m.UP,m.tCOLOR);
 	    m.pass();
 	}
-
+	m.setPower(40);
+	m.releasetimer();
 	m.followP(m.UP,m.tGRAY);
-	m.move(250);
-	m.release(false);
+	m.move(150);
 	m.move(-200);
 	m.grab(false);
 	m.followP(m.UP,m.tCOLOR);
@@ -95,9 +107,21 @@ public class Navigator {
 	    m.move(250);
 	    m.turn(m.LEFT,70);
 	    m.align(m.UP,m.RIGHT);
-	    m.move(-150);
+	    m.move(-200);
 	}
 	else if((grid == 1 && i==2) || (grid == 2 && i==3)) {
+	    m.move(500);
+	    m.turn(m.RIGHT,70);
+	    m.align(m.UP,m.RIGHT);
+	    m.move(-150);
+	}
+	else if((grid == 2 && i==2)) {
+	    m.move(90);
+	}
+	else if(grid == 3 && i==3) {
+	    m.move(180);
+	    m.turn(m.LEFT,70);
+	    m.align(m.LEFT,m.RIGHT);
 	    m.move(500);
 	    m.turn(m.RIGHT,70);
 	    m.align(m.UP,m.RIGHT);

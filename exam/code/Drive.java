@@ -17,6 +17,7 @@ public class Drive {
 		n.fixRow();
 	}
 
+	while (true);
     }
 
     public static void main (String[] aArg){

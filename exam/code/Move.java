@@ -18,7 +18,7 @@ public class Move {
 	setPower(speed);
 	MP1.resetTachoCount();
 	controlMotor(power*direction,-power*direction);
-	while (MP1.getTachoCount()*direction<319);
+	while (MP1.getTachoCount()*direction<290);
 	controlMotor(0,0);
 	setPower(buffer);
     }
@@ -66,6 +66,7 @@ public class Move {
 	int terminateCount = 0;
 	boolean overunder = false;
 	int overunderstate = 0;
+	boolean dal = true;
 	while (!Button.ESCAPE.isDown()) {
 	    //# Pcontrol
 	    int error = light() - offset;
@@ -103,25 +104,41 @@ public class Move {
 	    }
 	    
 	    else if (terminate == tFRONT)
-		if (light() < offset - 35 && overunder) {
-		    if (terminateCount > 10)  break;
+		if (light() < offset - 30 && overunder) {
+		    if (terminateCount > 7)  break;
 		    terminateCount++;
 		    continue;
 		}
 		else terminateCount = 0;
 
 	    else if (terminate == 5)
-		if (light() < offset - 20) {
+		if (light() < offset - 15) {
 		    if (terminateCount > 4)  break;
 		    terminateCount++;
 		    continue;
 		}
 		else terminateCount = 0;
 
-	    else if (terminate == tGRAY && overunder && light() > offset + 5) 
-		break;
+
+
+	    else if (terminate == tGRAY && overunder) {
+		if (light() < offset) 
+		    terminateCount++;
+		else
+		    terminateCount=0;
+
+
+		if (terminateCount >= 10)  {
+		    controlMotor(0,0);
+		    break;
+		}
+
+	    }
 	}
+
     }
+    int kaka = 0;
+    Datalog dl;
     private void approach() {
 	move(230);
     }
@@ -164,6 +181,20 @@ public class Move {
 
     public void calibrate() {
 	grab(true);
+	hardvalue();
+	controlMotor(power,power);
+	int green = light();
+	while (light() < green+40);
+	sleep(100);
+	calibratenext(-1);
+	move(200);
+	turn(RIGHT);
+	align(UP,RIGHT);
+	setPower(100);
+	followP(UP,tFRONT);	
+    }
+    public void calibrate_() {
+	grab(true);
 	controlMotor(power,power);
 	ambientlight= ls2.readNormalizedValue();
 	int green = light();
@@ -192,12 +223,28 @@ public class Move {
 	turn(RIGHT,70,200);
 	controlMotor(power,power);
 
+	hardvalue();
 	calibratenext(-1);
 	move(200);
 	align(UP,LEFT);
 	setPower(100);
 	followP(UP,tFRONT);
 	colorMax = cs.getRawLightValue();	
+
+	LCD.drawInt(offset_up,0,0);
+	LCD.drawInt(offset_down,0,1);
+	LCD.drawInt(offset_left,0,2);
+	LCD.drawInt(offset_right,0,3);
+	LCD.drawInt(colorMax,0,4);
+
+    }
+    public void hardvalue() {
+	offset_up = 396;
+	offset_down =373;
+	offset_left =385;
+	offset_right =389;
+	colorMax = 287;
+
     }
     public void align(int direction, int side) {
 	int buffer = power;
@@ -214,11 +261,13 @@ public class Move {
 	setPower(buffer);
     }
 
-
+    private GrabReleaseTimer GrabReleaseTimer;
     public Move() {
 	//# Setup
 	M3.setSpeed(720);
 	cs.setFloodlight(Color.WHITE);
+	GrabReleaseTimer= new GrabReleaseTimer(M3);
+	GrabReleaseTimer.start();
     }
     
     public void controlMotor(MotorPort m, int value) {
@@ -242,6 +291,7 @@ public class Move {
 	int blue = raw.getBlue();
 	if (red-green > 20)
 	    return 1; // Red
+
 	if (blue-green > 20) 
 	    return 2; // Blue
 	if (colorMax-green > 120)
@@ -258,6 +308,30 @@ public class Move {
 	M3.rotateTo(0,f);
 	M3.setSpeed(720);
     }
+    public void releasetimer() {
+	GrabReleaseTimer.release();
+    }
 
+}
+class GrabReleaseTimer extends Thread {
+    private NXTRegulatedMotor m;
+    private boolean runner = true,release=false;;
+    public GrabReleaseTimer(NXTRegulatedMotor m) {
+	this.m = m;
+    }
+    public void run() {
+	while (runner) {
+	    if (release) {
+		try {
+		    Thread.sleep(600);
+		    m.rotateTo(0);
+		    release = false;
+		}
+		catch (Exception e) {}
+	    }
+	}
 
+    }
+    public void release() {release=true;}
+    public void close() {runner=false;}
 }
