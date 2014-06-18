@@ -16,7 +16,7 @@ public class Navigator {
 	//# Grap and RUN
 	m.grapSolar();
 	m.turnsolar();
-	m.align(m.DOWN,m.RIGHT);
+	//m.align(m.DOWN,m.RIGHT);
 	for (int i=solar;i>=0;i--)
 	    if (i == 0)
 		m.followP(m.DOWN,5);
@@ -97,15 +97,8 @@ public class Navigator {
 	    m.align(m.UP,m.RIGHT);
 	    m.move(-150);
 	}
-	else if(grid == 1 && i==2) {
-	    m.followP(m.LEFT,5);
-	    m.move(280);
-	    m.turn(m.RIGHT,70);
-	    m.align(m.UP,m.RIGHT);
-	    m.move(-150);
-	}
-	else if(grid == 2 && i==3) {
-	    m.move(600);
+	else if((grid == 1 && i==2) || (grid == 2 && i==3)) {
+	    m.move(500);
 	    m.turn(m.RIGHT,70);
 	    m.align(m.UP,m.RIGHT);
 	    m.move(-150);

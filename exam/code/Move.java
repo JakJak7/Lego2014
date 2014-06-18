@@ -42,7 +42,7 @@ public class Move {
 	while (d*MP1.getTachoCount()<i*d);
 	controlMotor(0,0);
     }
-    public void pass() {move(220);}
+    public void pass() {move(290);}
     public void setPower(int power) {this.power = power;}
     public int getColor() {return lastColor;}
 
@@ -103,15 +103,15 @@ public class Move {
 	    }
 	    
 	    else if (terminate == tFRONT)
-		if (light() < offset - 15 && overunder) {
-		    if (terminateCount > 4)  break;
+		if (light() < offset - 35 && overunder) {
+		    if (terminateCount > 10)  break;
 		    terminateCount++;
 		    continue;
 		}
 		else terminateCount = 0;
 
 	    else if (terminate == 5)
-		if (light() < offset - 15) {
+		if (light() < offset - 20) {
 		    if (terminateCount > 4)  break;
 		    terminateCount++;
 		    continue;
@@ -146,7 +146,7 @@ public class Move {
 	grapSolar();
 	turnsolar();
 	sleep(50);
-	move(-180);
+	move(-230);
 	release(false);
 	move(-200);
 	grab(false);    
@@ -167,9 +167,10 @@ public class Move {
 	controlMotor(power,power);
 	ambientlight= ls2.readNormalizedValue();
 	int green = light();
+	setPower(70);
 	while (light() < green+40);
 	sleep(100);
-
+	
 	offset_left = calibratenext(2);
 	turn(LEFT);
 	sleep(200);
@@ -192,8 +193,7 @@ public class Move {
 	controlMotor(power,power);
 
 	calibratenext(-1);
-	move(100);
-	controlMotor(0,0);
+	move(200);
 	align(UP,LEFT);
 	setPower(100);
 	followP(UP,tFRONT);
@@ -205,11 +205,11 @@ public class Move {
 	controlMotor(power*side,-power*side);
 	int offset = getOffset(direction);
 	int count = 0;
-	while (light() >= offset-5);
+	while (light() >= offset-15);
 
 	if (side != LEFT)
 	    controlMotor(-power*side,power*side);
-	while (light() <= offset+5);
+	while (light() <= offset+15);
 	controlMotor(0,0);
 	setPower(buffer);
     }
@@ -228,7 +228,8 @@ public class Move {
 	else if (value == -1) m.controlMotor(value,4); //4 float
     }
     public void sleep(int i) {try {Thread.sleep(i);}catch (Exception e){}}
-    private int light() {return ls.readNormalizedValue();}
+    private int light() {return ls.readNormalizedValue()-(
+	    ls2.readNormalizedValue()-ambientlight);}
     public void controlMotor(int value1, int value2) {
 	controlMotor(MP1,value1);
 	controlMotor(MP2,value2);
@@ -239,9 +240,9 @@ public class Move {
 	int red = raw.getRed();
 	int green = raw.getGreen();
 	int blue = raw.getBlue();
-	if (red-green > 5)
+	if (red-green > 20)
 	    return 1; // Red
-	if (blue-green > 5) 
+	if (blue-green > 20) 
 	    return 2; // Blue
 	if (colorMax-green > 120)
 	    return 0; // Black
