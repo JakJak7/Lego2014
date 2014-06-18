@@ -5,7 +5,8 @@ public class Move {
     public final int LEFT=-1,RIGHT=1,UP=0,DOWN=2,
 	tCOLOR=0,tFRONT=1,tBACK=2,tGRAY=3;
 
-    private final LightSensor ls = new LightSensor(SensorPort.S1,true);
+    private final LightSensor ls = new LightSensor(SensorPort.S1,true),
+	ls2 = new LightSensor(SensorPort.S2,false);
     private final ColorSensor cs = new ColorSensor(SensorPort.S3);
     private final NXTRegulatedMotor M3 = Motor.C;
     private final MotorPort MP1 = MotorPort.A, MP2 = MotorPort.B;
@@ -17,7 +18,7 @@ public class Move {
 	setPower(speed);
 	MP1.resetTachoCount();
 	controlMotor(power*direction,-power*direction);
-	while (MP1.getTachoCount()*direction<280);
+	while (MP1.getTachoCount()*direction<319);
 	controlMotor(0,0);
 	setPower(buffer);
     }
@@ -101,7 +102,7 @@ public class Move {
 		} terminateCount=0;
 	    }
 	    
-	    if (terminate == tFRONT)
+	    else if (terminate == tFRONT)
 		if (light() < offset - 15 && overunder) {
 		    if (terminateCount > 4)  break;
 		    terminateCount++;
@@ -109,16 +110,15 @@ public class Move {
 		}
 		else terminateCount = 0;
 
-	    if (terminate == 5 && overunder)
-		if (light() < offset - 20) {
+	    else if (terminate == 5)
+		if (light() < offset - 15) {
 		    if (terminateCount > 4)  break;
 		    terminateCount++;
 		    continue;
 		}
 		else terminateCount = 0;
 
-
-	    if (terminate == tGRAY && overunder && light() > offset + 5) 
+	    else if (terminate == tGRAY && overunder && light() > offset + 5) 
 		break;
 	}
     }
@@ -137,7 +137,7 @@ public class Move {
 	setPower(70);
 	MP1.resetTachoCount();
 	controlMotor(power*LEFT,-power*LEFT);
-	while (MP1.getTachoCount()*LEFT<700);
+	while (MP1.getTachoCount()*LEFT<630);
 	controlMotor(0,0);
 	setPower(buffer);
     }
@@ -150,52 +150,9 @@ public class Move {
 	release(false);
 	move(-200);
 	grab(false);    
-}
-/*
-    public void calibrate_old() {
-	int maxblack = 1024;
-	grab(true);
-	controlMotor(power,power);
-	int green = light(FRONT);
-	while (light(FRONT) < green+40);
-	sleep(100);
-	int white1L = light(FRONT); // 1 LIGHT WHITE
-	int black1L = maxblack;
-	while (light(FRONT) > white1L-30);
-	while (light(FRONT) < white1L-20) // 1 LIGHT BLACK
-	    black1L = (light(FRONT) < black1L)?light(FRONT):black1L;
-	int white2S = light(BACK); // 2 LIGHT WHITE
-	int black2S = maxblack;
-	while (light(BACK) > white2S-40);
-	while (light(BACK) < white2S-20) // 2 LIGHT BLACK
-	    black2S = (light(BACK) < black2S)?light(BACK):black2S;
-	turn(LEFT);turn(LEFT);
-	int white1S = light(FRONT); // 1 WHITE SHADOW
-	int white2L = light(BACK); // 2 WHITE SHADOW
-	controlMotor(-power,-power);
-	int black1S = maxblack;
-	while (light(FRONT) > white1S-30);
-	while (light(FRONT) < white1S-20) // 1 BLACK SHADOW
-	    black1S = (light(FRONT) < black1S)?light(FRONT):black1S;
-	controlMotor(power,power);
-	int black2L = maxblack;
-	while (light(BACK) > white2L-40);
-	while (light(BACK) < white2L-20) // 2 BLACK SHADOW
-	    black2L = (light(BACK) < black2L)?light(BACK):black2L;
-
-	int broek=10;
-	offsetFrontLight  = (int) (white1L/broek+black1L/broek*(broek-1));
-	offsetFrontShadow = (int) (white1S+black1S)/2;
-	offsetBackLight    = (int) (white2L+black2L)/2;
-	offsetBackShadow   = (int) (white2S+black2S)/2;
-
-	move(-80);
-	turn(LEFT);
-	align(LIGHT,LEFT);
     }
-    */
-  
-    private int calibratenext(int broek) {
+
+    public int calibratenext(int broek) {
 	int white = light();
 	while (light() > white-30);
 	int black = light();
@@ -203,64 +160,56 @@ public class Move {
 	    black = (light() < black)?light():black;
 	return (white/broek+black/broek*(broek-1));
     }
-    
+    private int ambientlight = 0;
+
     public void calibrate() {
 	grab(true);
 	controlMotor(power,power);
+	ambientlight= ls2.readNormalizedValue();
 	int green = light();
 	while (light() < green+40);
 	sleep(100);
 
-	offset_left = calibratenext(5);
+	offset_left = calibratenext(2);
 	turn(LEFT);
-	sleep(100);
+	sleep(200);
 	controlMotor(power,power);
 	offset_down = calibratenext(2);
 	turn(LEFT);
-	sleep(100);
+	sleep(200);
 	controlMotor(-power,-power);
 	
 	offset_right = calibratenext(2);
 	move(10);
 	turn(LEFT);
-	sleep(100);
+	sleep(200);
 	controlMotor(-power,-power);
 	
-	offset_up = calibratenext(2);
+	offset_up = calibratenext(4);
 	move(300);
 
-	turn(RIGHT,70,180);
+	turn(RIGHT,70,200);
 	controlMotor(power,power);
-	/*	controlMotor(0,0);
-	LCD.drawInt(offset_left,0,0,2);
-	while (true) {
-	    LCD.drawInt(light(),0,0,1);
-	    }*/
+
 	calibratenext(-1);
-	move(30);
+	move(100);
 	controlMotor(0,0);
 	align(UP,LEFT);
 	setPower(100);
 	followP(UP,tFRONT);
 	colorMax = cs.getRawLightValue();	
     }
-
     public void align(int direction, int side) {
 	int buffer = power;
 	setPower(40);
 	controlMotor(power*side,-power*side);
 	int offset = getOffset(direction);
-	while (light() >= offset) {
-	    LCD.drawInt(offset,0,0,1);
-	    LCD.drawInt(light(),0,0,2);
-	}
+	int count = 0;
+	while (light() >= offset-5);
+
 	if (side != LEFT)
 	    controlMotor(-power*side,power*side);
-	while (light() <= offset) {
-	    LCD.drawInt(offset,0,0,3);
-	    LCD.drawInt(light(),0,0,4);
-	}
-
+	while (light() <= offset+5);
 	controlMotor(0,0);
 	setPower(buffer);
     }
@@ -270,7 +219,6 @@ public class Move {
 	//# Setup
 	M3.setSpeed(720);
 	cs.setFloodlight(Color.WHITE);
-	//cs2.setFloodlight(Color.WHITE);
     }
     
     public void controlMotor(MotorPort m, int value) {
@@ -293,9 +241,9 @@ public class Move {
 	int blue = raw.getBlue();
 	if (red-green > 5)
 	    return 1; // Red
-	else if (blue-green > 5) 
+	if (blue-green > 5) 
 	    return 2; // Blue
-	else if (colorMax-green > 100)
+	if (colorMax-green > 120)
 	    return 0; // Black
 
 	return -1;

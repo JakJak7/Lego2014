@@ -9,19 +9,8 @@ public class Navigator {
     public void turnSolar() {
 	m.turnSolar();
 	m.move(200);
-	
-	if (solar != 0) 
-	    m.followP(m.UP,m.tCOLOR);
-	else
-	    m.followP(m.UP,m.tFRONT);
-	m.pass();
-	m.followP(m.UP,m.tCOLOR);
-	m.pass();
-	m.followP(m.UP,m.tFRONT);
-	m.controlMotor(0,0);
-	m.sleep(300);
-
 	direction*=-1;
+
     }
     public void replace(){
 	//# Grap and RUN
@@ -47,22 +36,21 @@ public class Navigator {
     	else if (grid == 3);//m.turn(m.LEFT);
 
 	// Get home and replace
-	m.setPower(100);
+	m.setPower(70);
 	m.followP(m.DOWN,m.tFRONT);
 	m.setPower(50);
-	m.move(220);
+	m.move(250);
 	m.turn(m.RIGHT);
 	m.followP(m.LEFT,m.tFRONT);
+	m.move(-300);
+	m.followP(m.LEFT,m.tFRONT);
 	m.controlMotor(0,0);
-	Sound.beep();
 	//if first..
 	int reservePanels = 0;
 	if (reservePanels == 0) {
-	    m.setPower(40);
-	    m.move(70);
-	    m.offset_left-=10;
-	    m.followP(m.LEFT,m.tCOLOR);
-	    m.offset_left+=10;
+	    m.setPower(50);
+	    m.move(250);
+
 	    m.release(false);
 	    m.move(-200);
 	    m.grab(false);
@@ -71,11 +59,15 @@ public class Navigator {
 
 	    m.grapSolar();
 	    m.setPower(70);
-	    m.move(-950);
+	    m.move(-900);
+	    m.turn(m.RIGHT,70);
+
 	}
 	else; //2 og 3..
-	m.turn(m.RIGHT,70);
+	
+	
 	m.setPower(100);
+	m.turn(m.LEFT,70);
 	m.align(m.UP,m.LEFT);
 	m.followP(m.UP,m.tFRONT);
 	gotoGrid(grid);
@@ -86,7 +78,7 @@ public class Navigator {
 	}
 
 	m.followP(m.UP,m.tGRAY);
-	m.move(430);
+	m.move(250);
 	m.release(false);
 	m.move(-200);
 	m.grab(false);
@@ -95,22 +87,44 @@ public class Navigator {
 
     public void gotoGrid(int i){
 	if(i==1) {
-	    m.move(200);
+	    m.move(180);
 	    m.turn(m.RIGHT,70);
+	    m.align(m.RIGHT,m.RIGHT);
 	    m.setPower(70);
-	    m.followP(m.RIGHT,m.tFRONT);
+	    m.followP(m.RIGHT,5);
 	    m.move(250);
 	    m.turn(m.LEFT,70);
-	    m.align(m.UP,m.LEFT);
+	    m.align(m.UP,m.RIGHT);
 	    m.move(-150);
 	}
-	else if(i==2)
-	    m.move(30);
-	else if(i==3);
+	else if(grid == 1 && i==2) {
+	    m.followP(m.LEFT,5);
+	    m.move(280);
+	    m.turn(m.RIGHT,70);
+	    m.align(m.UP,m.RIGHT);
+	    m.move(-150);
+	}
+	else if(grid == 2 && i==3) {
+	    m.move(600);
+	    m.turn(m.RIGHT,70);
+	    m.align(m.UP,m.RIGHT);
+	    m.move(-150);
+	}
+	else if(grid == 3 && i==4) {
+	    m.setPower(90);
+	    m.move(400);
+	    m.turn(m.RIGHT,70);
+	    m.align(m.DOWN,m.RIGHT);
+	    m.followP(m.DOWN,m.tFRONT);
+	    m.move(280);
+	    m.turn(m.LEFT,70);
+	    m.move(600);
+	}
 	grid = i;
     }
 
     public void fixRow() {
+	direction = 1;
 	m.followP(m.UP,m.tCOLOR);
 	m.move(-400);
 	//1. Drive to the end of the row and remember the states of the solarpannels
@@ -130,35 +144,87 @@ public class Navigator {
 		m.followP(m.UP,m.tCOLOR);
 	    }
 	}
-
+	solar=2;
 	if (s[2] == 2)
 	    turnSolar();
-	else
-	    m.move(-500);
 
+	int endposition = 0;
 	if (direction == -1) {
+	    m.followP(m.UP,m.tCOLOR);
 	    if (s[0] == 2) {
-		// GOTO 0, and turn ..
+		m.pass();
+		m.followP(m.UP,m.tCOLOR);
+		turnSolar();
 		if (s[1] == 2) {
-		    //move forward and turn 1
+		    m.followP(m.UP,m.tCOLOR);
+		    turnSolar();
+		    endposition = 1;
 		}
+		else
+		    endposition = 2;
 	    }
 	    else if (s[1] == 2) {
-		// GOTO 2, and finish
+		turnSolar();
+		endposition = 3;
 	    }
-	    //move backwards out of grid 1
+	    else  {
+		m.followP(m.DOWN,m.tCOLOR);
+		m.pass();
+		endposition=1;
+	    }
+
 	}
 	else if (direction == 1) {
 	    if (s[1] == 2) {
-		//move backwards and turn 1
+		m.move(-600);
+		m.followP(m.UP,m.tCOLOR);
+		turnSolar();
 		if (s[0] == 2) {
-		    //move backwards and turn 0
+		    m.followP(m.DOWN,m.tCOLOR);
+		    turnSolar();
+		    endposition = 2;
 		}
+		else
+		    endposition = 1;
 	    }
 	    else if (s[0] == 2) {
-		//move backwards and turn 1
+		m.move(-1200);
+		m.followP(m.UP,m.tCOLOR);
+		turnSolar();
+		endposition=4;
 	    }
-	    //move backwards out of grid 1
+	    else
+		m.move(-1400);
+	}
+
+	if(endposition==1) {
+	    m.followP(m.DOWN,m.tCOLOR);
+	    m.pass();
+	    m.followP(m.DOWN,5);
+	    m.move(280);
+	}
+	else if(endposition==2)
+	    m.move(-400);
+	else if(endposition==3)
+	    m.move(-1100);
+	else if(endposition==4) {
+	    m.followP(m.DOWN,5);
+	    m.move(280);
+	}
+
+	if (grid == 1 || grid == 2) {
+	    if (direction == 1)
+		m.turn(m.LEFT,70);
+	    else
+		m.turn(m.RIGHT,70);
+	    m.align(m.LEFT,m.RIGHT);
+	}
+	else  {
+	    if (direction == 1)
+		m.turn(m.RIGHT,70);
+	    else
+		m.turn(m.LEFT,70);
+	    m.align(m.RIGHT,m.RIGHT);
 	}
     }
 }
