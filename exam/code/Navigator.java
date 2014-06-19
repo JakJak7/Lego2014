@@ -62,7 +62,7 @@ public class Navigator {
 	
 	m.setPower(50);
 	m.release(true);
-	m.move(200);
+	m.move(250);
        	m.move(-200);
 	//if first..
 	if (reservePanels == 0) {
@@ -233,7 +233,7 @@ public class Navigator {
 	else if(endposition==2)
 	    m.move(-400);
 	else if(endposition==3)
-	    m.move(-1100);
+	    m.move(-1200);
 	else if(endposition==4) {
 	    m.followP(m.DOWN,5);
 	    m.move(280);
@@ -251,7 +251,7 @@ public class Navigator {
 		m.turn(m.RIGHT,70);
 	    else
 		m.turn(m.LEFT,70);
-	    m.align(m.RIGHT,m.RIGHT);
+	    m.align(m.RIGHT,m.LEFT);
 	}
     }
 }

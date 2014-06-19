@@ -42,7 +42,12 @@ public class Move {
 	while (d*MP1.getTachoCount()<i*d);
 	controlMotor(0,0);
     }
-    public void pass() {move(320);}
+    public void pass() {
+	int p = power;
+	setPower(100);
+	move(300);
+	setPower(p);
+    }
     public void setPower(int power) {this.power = power;}
     public int getColor() {return lastColor;}
 
@@ -112,7 +117,7 @@ public class Move {
 		else terminateCount = 0;
 
 	    else if (terminate == 5)
-		if (light() < offset - 15) {
+		if (light() < offset - 10) {
 		    if (terminateCount > 4)  break;
 		    terminateCount++;
 		    continue;
@@ -128,7 +133,7 @@ public class Move {
 		    terminateCount=0;
 
 
-		if (terminateCount >= 15)  {
+		if (terminateCount >= 30)  {
 		    controlMotor(0,0);
 		    break;
 		}
