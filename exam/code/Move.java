@@ -117,7 +117,7 @@ public class Move {
 		else terminateCount = 0;
 
 	    else if (terminate == 5)
-		if (light() < offset - 10) {
+		if (light() < offset - 15) {
 		    if (terminateCount > 4)  break;
 		    terminateCount++;
 		    continue;
@@ -133,7 +133,7 @@ public class Move {
 		    terminateCount=0;
 
 
-		if (terminateCount >= 30)  {
+		if (terminateCount >= 25)  {
 		    controlMotor(0,0);
 		    break;
 		}
@@ -159,7 +159,7 @@ public class Move {
 	setPower(70);
 	MP1.resetTachoCount();
 	controlMotor(power*LEFT,-power*LEFT);
-	while (MP1.getTachoCount()*LEFT<620);
+	while (MP1.getTachoCount()*LEFT<630);
 	controlMotor(0,0);
 	setPower(buffer);
     }

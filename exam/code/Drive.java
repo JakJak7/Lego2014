@@ -11,7 +11,7 @@ public class Drive {
 	m.calibrate();
 	
 	//# Go out into space
-	for (int i = 1;i<=4;i++) {
+	for (int i = 1;i<=3;i++) {
 	    n.gotoGrid(i);
 	    if (i < 4)
 		n.fixRow();

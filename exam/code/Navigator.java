@@ -119,6 +119,16 @@ public class Navigator {
 	    m.align(m.UP,m.RIGHT);
 	    m.move(-100);
 	}
+	/* bedste tilfælde...
+	  else if((grid == 2 && i==3)) {
+	    m.move(150);
+	    m.followP(m.DOWN,m.tFRONT);
+	    m.move(280);
+	    m.turn(m.LEFT,70);
+	    m.move(600);
+	    return;
+	}
+	*/
 	else if((grid == 1 && i==2) || (grid == 2 && i==3)) {
 	    m.move(550);
 	    m.turn(m.RIGHT,70);
@@ -251,7 +261,7 @@ public class Navigator {
 		m.turn(m.RIGHT,70);
 	    else
 		m.turn(m.LEFT,70);
-	    m.align(m.RIGHT,m.LEFT);
+	    m.align(m.RIGHT,m.RIGHT);
 	}
     }
 }
