@@ -2,7 +2,7 @@ import lejos.nxt.*;
 
 public class Navigator {
     private Move m;
-    private int direction=1, grid=-1, solar=-1;
+    private int direction=1, grid=-1, solar=-1, reservePanels = 0;
 
     public Navigator(Move m) {this.m = m;}
 
@@ -14,6 +14,7 @@ public class Navigator {
     }
     public void replace(){
 	//# Grap and RUN
+	m.move(-10);
 	m.grapSolar();
 	m.turnsolar();
 	m.align(m.DOWN,m.RIGHT);
@@ -56,13 +57,12 @@ public class Navigator {
 	m.turn(m.RIGHT);
 	m.followP(m.LEFT,m.tFRONT);
 	m.move(-300);
-	m.followP(m.LEFT,m.tFRONT);
+	m.followP(m.LEFT,5);
 	m.controlMotor(0,0);
 	
-	int reservePanels = 0;
 	m.setPower(50);
 	m.release(true);
-	m.move(190);
+	m.move(200);
        	m.move(-200);
 	//if first..
 	if (reservePanels == 0) {
@@ -75,12 +75,13 @@ public class Navigator {
 	    m.turn(m.RIGHT,70);
 	}
 	else if (reservePanels == 1) {
-	    m.move(-200);
-	    m.followP(m.LEFT,m.tFRONT);
+	    m.setPower(40);
+	    //m.grab(true);
+	    m.move(-400);
 	    m.turn(m.RIGHT,70);
-	    m.move(500);
-	    m.turn(m.RIGHT,70);
-	    m.move(500);
+	    m.move(400);
+	    m.turn(m.LEFT,70);
+	    m.move(400);
 	    m.grapSolar();
 	    m.move(-800);
 	    m.turn(m.RIGHT,70);
@@ -100,7 +101,7 @@ public class Navigator {
 	m.setPower(40);
 	m.releasetimer();
 	m.followP(m.UP,m.tGRAY);
-	m.move(120);
+	m.move(230);
 	m.move(-200);
 	m.grab(false);
 	m.followP(m.UP,m.tCOLOR);

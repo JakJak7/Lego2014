@@ -122,13 +122,13 @@ public class Move {
 
 
 	    else if (terminate == tGRAY && overunder) {
-		if (light() < offset) 
+		if (light() > offset) 
 		    terminateCount++;
 		else
 		    terminateCount=0;
 
 
-		if (terminateCount >= 10)  {
+		if (terminateCount >= 15)  {
 		    controlMotor(0,0);
 		    break;
 		}
@@ -241,7 +241,7 @@ public class Move {
     public void hardvalue() {
 	offset_up = 390;
 	offset_down =390;
-	offset_left =390;
+	offset_left = 390;
 	offset_right =390;
 	colorMax = 251;
 
