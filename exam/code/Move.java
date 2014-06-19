@@ -18,7 +18,7 @@ public class Move {
 	setPower(speed);
 	MP1.resetTachoCount();
 	controlMotor(power*direction,-power*direction);
-	while (MP1.getTachoCount()*direction<290);
+	while (MP1.getTachoCount()*direction<319);
 	controlMotor(0,0);
 	setPower(buffer);
     }
@@ -42,7 +42,7 @@ public class Move {
 	while (d*MP1.getTachoCount()<i*d);
 	controlMotor(0,0);
     }
-    public void pass() {move(290);}
+    public void pass() {move(320);}
     public void setPower(int power) {this.power = power;}
     public int getColor() {return lastColor;}
 
@@ -154,7 +154,7 @@ public class Move {
 	setPower(70);
 	MP1.resetTachoCount();
 	controlMotor(power*LEFT,-power*LEFT);
-	while (MP1.getTachoCount()*LEFT<630);
+	while (MP1.getTachoCount()*LEFT<620);
 	controlMotor(0,0);
 	setPower(buffer);
     }
@@ -187,7 +187,7 @@ public class Move {
 	while (light() < green+40);
 	sleep(100);
 	calibratenext(-1);
-	move(200);
+	move(100);
 	turn(RIGHT);
 	align(UP,RIGHT);
 	setPower(100);
@@ -217,13 +217,13 @@ public class Move {
 	sleep(200);
 	controlMotor(-power,-power);
 	
-	offset_up = calibratenext(4);
+	offset_up = calibratenext(2);
 	move(300);
 
 	turn(RIGHT,70,200);
 	controlMotor(power,power);
 
-	hardvalue();
+	//hardvalue();
 	calibratenext(-1);
 	move(200);
 	align(UP,LEFT);
@@ -239,11 +239,11 @@ public class Move {
 
     }
     public void hardvalue() {
-	offset_up = 396;
-	offset_down =373;
-	offset_left =385;
-	offset_right =389;
-	colorMax = 287;
+	offset_up = 390;
+	offset_down =390;
+	offset_left =390;
+	offset_right =390;
+	colorMax = 251;
 
     }
     public void align(int direction, int side) {
@@ -256,7 +256,7 @@ public class Move {
 
 	if (side != LEFT)
 	    controlMotor(-power*side,power*side);
-	while (light() <= offset+15);
+	while (light() <= offset+5);
 	controlMotor(0,0);
 	setPower(buffer);
     }

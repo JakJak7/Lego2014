@@ -49,7 +49,7 @@ public class Navigator {
 	}
 
 	// Get home and replace
-	m.setPower(70);
+	m.setPower(100);
 	m.followP(m.DOWN,m.tFRONT);
 	m.setPower(50);
 	m.move(250);
@@ -58,27 +58,36 @@ public class Navigator {
 	m.move(-300);
 	m.followP(m.LEFT,m.tFRONT);
 	m.controlMotor(0,0);
-	//if first..
+	
 	int reservePanels = 0;
+	m.setPower(50);
+	m.release(true);
+	m.move(190);
+       	m.move(-200);
+	//if first..
 	if (reservePanels == 0) {
-	    m.setPower(50);
-	    m.release(true);
-	    m.move(190);
-
-	    m.move(-200);
 	    m.grab(false);
 	    m.move(200);
 	    m.release(false);
-
 	    m.grapSolar();
 	    m.setPower(70);
-	    m.move(-900);
+	    m.move(-800);
 	    m.turn(m.RIGHT,70);
-
 	}
-	else; //2 og 3 reserve solceller
+	else if (reservePanels == 1) {
+	    m.move(-200);
+	    m.followP(m.LEFT,m.tFRONT);
+	    m.turn(m.RIGHT,70);
+	    m.move(500);
+	    m.turn(m.RIGHT,70);
+	    m.move(500);
+	    m.grapSolar();
+	    m.move(-800);
+	    m.turn(m.RIGHT,70);
+	}
 
 	
+	reservePanels++;
 	m.setPower(100);
 	m.align(m.UP,m.RIGHT);
 	m.followP(m.UP,m.tFRONT);
@@ -91,7 +100,7 @@ public class Navigator {
 	m.setPower(40);
 	m.releasetimer();
 	m.followP(m.UP,m.tGRAY);
-	m.move(150);
+	m.move(120);
 	m.move(-200);
 	m.grab(false);
 	m.followP(m.UP,m.tCOLOR);
@@ -107,13 +116,13 @@ public class Navigator {
 	    m.move(250);
 	    m.turn(m.LEFT,70);
 	    m.align(m.UP,m.RIGHT);
-	    m.move(-200);
+	    m.move(-100);
 	}
 	else if((grid == 1 && i==2) || (grid == 2 && i==3)) {
-	    m.move(500);
+	    m.move(550);
 	    m.turn(m.RIGHT,70);
 	    m.align(m.UP,m.RIGHT);
-	    m.move(-150);
+	    m.move(-100);
 	}
 	else if((grid == 2 && i==2)) {
 	    m.move(90);
@@ -125,7 +134,7 @@ public class Navigator {
 	    m.move(500);
 	    m.turn(m.RIGHT,70);
 	    m.align(m.UP,m.RIGHT);
-	    m.move(-150);
+	    m.move(-100);
 	}
 	else if(grid == 3 && i==4) {
 	    m.setPower(90);
@@ -143,7 +152,7 @@ public class Navigator {
     public void fixRow() {
 	direction = 1;
 	m.followP(m.UP,m.tCOLOR);
-	m.move(-400);
+	m.move(-350);
 	//1. Drive to the end of the row and remember the states of the solarpannels
 	// unless it's inactive then replace and mark it as working
 	m.followP(m.UP,m.tCOLOR);
@@ -193,7 +202,7 @@ public class Navigator {
 	}
 	else if (direction == 1) {
 	    if (s[1] == 2) {
-		m.move(-600);
+		m.move(-700);
 		m.followP(m.UP,m.tCOLOR);
 		turnSolar();
 		if (s[0] == 2) {
@@ -205,7 +214,7 @@ public class Navigator {
 		    endposition = 1;
 	    }
 	    else if (s[0] == 2) {
-		m.move(-1200);
+		m.move(-1500);
 		m.followP(m.UP,m.tCOLOR);
 		turnSolar();
 		endposition=4;
