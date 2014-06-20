@@ -4,16 +4,16 @@ set ylabel "Raw light value"
 set title "Lightvalues"
 
 set output "retningsbaseret_3vejs.png"
-plot "../retningsbaseret/Højre3Vej.txt" using 1:2 w l, \
-"../retningsbaseret/Mod3Vej.txt" using 1:2 w l, \
-"../retningsbaseret/Venstre3Vej.txt" using 1:2 w l
+plot "../retningsbaseret/Højre3Vej.txt" using 1:2 w l title "Øst", \
+"../retningsbaseret/Mod3Vej.txt" using 1:2 w l title "Syd", \
+"../retningsbaseret/Venstre3Vej.txt" using 1:2 w l title "Vest"
 
 set output "retningsbaseret_4vejs.png"
-plot "../retningsbaseret/Højre4Vej.txt" using 1:2 w l, \
-"../retningsbaseret/iMod4Vej.txt" using 1:2 w l, \
-"../retningsbaseret/Mod4Vej.txt" using 1:2 w l, \
-"../retningsbaseret/Væk4Vej.txt" using 1:2 w l, \
-"../retningsbaseret/Venstre4Vej.txt" using 1:2 w l
+plot "../retningsbaseret/Højre4Vej.txt" using 1:2 w l title "Øst", \
+"../retningsbaseret/iMod4Vej.txt" using 1:2 w l title "Syd (ved basen)", \
+"../retningsbaseret/Mod4Vej.txt" using 1:2 w l title "Syd", \
+"../retningsbaseret/Væk4Vej.txt" using 1:2 w l title "Nord", \
+"../retningsbaseret/Venstre4Vej.txt" using 1:2 w l title "Vest"
 
 
 
