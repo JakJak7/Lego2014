@@ -5,6 +5,28 @@
 \usepackage{graphicx}
 \usepackage{url}
 \usepackage{longtable}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{name}{rgb}{0.5,0.5,0.5}
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+ 
+\lstset{language=Java,
+basicstyle=\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=2,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+breaklines=true,
+showstringspaces=false}
 
 \title{EMBEDDED SYSTEMS\\\small{EMBODIED AGENTS, DIGITAL CONTROL IN A PHYSICAL WORLD\\WORLD ROBOT OLYMPIAD 2014}}
 \author{Jesper Madsen -- sobuno@cs.au.dk -- 20101783\\Jakob Bjerre Jakobsen -- jakjak@cs.au.dk -- 20102095\\Henrik Knakkegaard Christensen -- knakke3@cs.au.dk -- 20082178}
@@ -12,7 +34,52 @@
 
 \begin{document}
 \maketitle
-\chapter*{WRO day 1}
-\input{dayOne.tex}
+\clearpage
+%\chapter*{WRO day 1}
+%\input{days/day01.tex}
 
+%\chapter*{WRO day 2}
+%\input{days/day02.tex}
+
+%\chapter*{WRO day 3}
+%\input{days/day03.tex}
+
+%\chapter*{WRO day 4}
+%\input{days/day04.tex}
+
+\chapter*{WRO day 5}
+\input{days/day05.tex}
+
+%\chapter*{WRO day 6}
+%\input{days/day06.tex}
+
+%\chapter*{WRO day 7}
+%\input{days/day07.tex}
+
+%\chapter*{WRO day 8}
+%\input{days/day08.tex}
+
+%\chapter*{WRO day 9}
+%\input{days/day09.tex}
+
+%\chapter*{WRO day 10}
+%\input{days/day10.tex}
+
+%\chapter*{WRO day 10}
+%\input{days/day10.tex}
+
+%\chapter*{WRO day 11}
+%\input{days/day11.tex}
+
+%\chapter*{WRO day 12}
+%\input{days/day12.tex}
+
+%\chapter*{WRO day 13}
+%\input{days/day13.tex}
+
+%\chapter*{WRO day 14}
+%\input{days/day14.tex}
+
+%\chapter*{WRO day 15}
+%\input{days/day15.tex}
 \end{document}

@@ -1,0 +1,55 @@
+\textbf{Date:} May 28th 2014\\\textbf{Duration:} 12-16\\\textbf{Group
+members:} Henrik, Jakob, Jesper
+
+\subsubsection{Goal}
+
+Due to the troubles we had with distinguishing intersections in order to
+navigate, we figured it may be worth our while to scrap the line
+follower approach entirely, and try navigating through the tacho
+counter. This will be quick to implement, and if it's able to stay on
+track, we will have saved a lot of time.\\And so, our goal for today is
+to explore the possibility of using a tacho counter, whilst trying to
+improve the line follower.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+    \KeywordTok{public} \DataTypeTok{static} \DataTypeTok{void} \FunctionTok{forward}\NormalTok{(}\DataTypeTok{float} \NormalTok{distance)\{ }
+        \DataTypeTok{int} \NormalTok{degrees = (}\DataTypeTok{int}\NormalTok{)(}\DecValTok{360}\NormalTok{*distance / (wheelSize * Math.}\FunctionTok{PI}\NormalTok{));}
+        \NormalTok{Motor.}\FunctionTok{B}\NormalTok{.}\FunctionTok{rotate}\NormalTok{(degrees, }\KeywordTok{true}\NormalTok{);}
+        \NormalTok{Motor.}\FunctionTok{C}\NormalTok{.}\FunctionTok{rotate}\NormalTok{(degrees);}
+    \NormalTok{\}}
+
+    \KeywordTok{public} \DataTypeTok{static} \DataTypeTok{void} \FunctionTok{right}\NormalTok{()\{}
+        \DataTypeTok{double} \NormalTok{degrees = }\DecValTok{360}\NormalTok{*((width*}\DecValTok{2} \NormalTok{* Math.}\FunctionTok{PI}\NormalTok{)/}\DecValTok{4}\NormalTok{) / (wheelSize * Math.}\FunctionTok{PI}\NormalTok{); }\CommentTok{//wheel rotations required for a 90 degree turn of the vehicle}
+        \NormalTok{degrees = degrees * }\FloatTok{1.}\NormalTok{05f; }\CommentTok{//taking slight inaccuracies into account}
+        \NormalTok{Motor.}\FunctionTok{B}\NormalTok{.}\FunctionTok{rotate}\NormalTok{((}\DataTypeTok{int}\NormalTok{)degrees/}\DecValTok{2}\NormalTok{, }\KeywordTok{true}\NormalTok{);}
+        \NormalTok{Motor.}\FunctionTok{C}\NormalTok{.}\FunctionTok{rotate}\NormalTok{((}\DataTypeTok{int}\NormalTok{)-degrees/}\DecValTok{2}\NormalTok{);}
+    \NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+Using these two methods, and a similar method for left(), and measuring
+the track in centimeters, we were able to get the vehicle to cover the
+whole track in a short time. After the first couple of turns it became
+quite inaccurate though, and we quickly saw the downside of driving
+using only the tacho counter. In addition to that, the vehicle we have
+is rather flexible due to a shoddy build, and this makes the wheels
+slide around, reducing the accuracy of the vehicle.
+
+While the tacho counter method was being developed, a line follower was
+being written and tested simultaneously. We tried to implement a PID
+controller from previous weeks to make the vehicle better at line
+following, but it later occurred to us that since there are no difficult
+curves on the track, this is unnecessary. Instead we implemented a
+proportional controller, and the results were promising. The vehicle
+could follow a straight line without issues.
+
+\subsubsection{Conclusion}
+
+Implementing a tacho navigator would require us to rebuild the vehicle
+and spend a lot of time tweaking parameters in order for it to not lose
+track of its position, and even then it will have no way of correcting
+its course. Therefore it is not a feasible solution.\\We will proceed
+with the newly implemented P controller, and use that for line
+following.
