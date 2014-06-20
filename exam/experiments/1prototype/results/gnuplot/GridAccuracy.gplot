@@ -20,9 +20,6 @@ plot "../GridAccuracyTilt.txt" every ::0::190 using 1:2 w l title "" lc rgb 'gre
 set output "GridAccuracyFollowBlackTilt.png"
 plot "../GridAccuracyFollowBlackTilt.txt" using 1:2 w l title ""
 
-set output "GridAccuracyFollowBlack3cm.png"
-plot "../GridAccuracyFollowBlack3cm.txt" using 1:2 w l title ""
-
 set output "GridAccuracyFollowBlack3cmTCross.png"
 plot "../GridAccuracyFollowBlack3cmTCross.txt" using 1:2 w l title ""
 
@@ -35,4 +32,7 @@ plot "../GridAccuracy3cm.txt" every ::0::110 using 1:2 w l title "" lc rgb 'gree
  "../GridAccuracy3cm.txt" every ::670::700 using 1:2 w l title "" lc rgb 'black', \
  "../GridAccuracy3cm.txt" every ::700::800 using 1:2 w l title "" lc rgb '#696969'
 
+set xrang [0:2000]
+set output "GridAccuracyFollowBlack3cm.png"
+plot "../GridAccuracyFollowBlack3cm.txt" using 1:2 w l title ""
 
