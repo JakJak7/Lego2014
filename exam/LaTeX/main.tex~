@@ -1,0 +1,43 @@
+\documentclass[a4paper,11pt,article,oneside]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[danish]{babel}
+\usepackage{graphicx}
+\usepackage{url}
+
+\title{String Algorithms Q4/2014 Project 2\\\small{Finding all occurrences of tandem repeats in strings\\in time O(n log n)}}
+\author{Morten Rasmussen -- cyrix@cs.au.dk -- 20074456\\Karsten Kongensholms -- kani85@cs.au.dk -- 20082831\\Henrik Knakkegaard Christensen -- knakke3@cs.au.dk -- 20082178}
+\date{13. may 2014}
+
+\begin{document}
+\maketitle
+
+\section*{Status.}
+Vi har fortsat implementeret i C. Algoritmerne giver de rigtige resultater på de filer vi har fået udleveret til at teste med, jeg har ikke kunne få en fornuftig testtid på smallest-half-algoritme-trikket når jeg kører med ene ens symboler i strengen, så ved ikke om algoritmen altid kører i O(n log n). Vi har ikke fundet anden måde at teste programmerne på så antager til modsatte er bevist at de virker.
+
+\url{http://au.knakke.dk/course/StrAlg/handin2.zip}
+
+\section*{Tree implementation.}
+I Project 1 fyldte hver node og leaf (leaf har samme struktur som en internal node) $7\times4 = 28$ bytes (antaget i386) under konstruktion af træet (parent, sibling, child, suffix) pointer, samt tre integers (string start og slut pointer og et index på hvilken streng sluttede i et leaf).
+
+I Project 2 starter jeg med at deconstructe dette træ og lave et tandemnode* træ i stedet som består af $5\times4 = 20$ byte pr node (sibling og child) pointer, og tre integers (path-depth, depthfirst-interval (2 integers)).
+\section*{Answers to the ``above questions''.}
+\begin{enumerate}
+\item Insights you may have had while implementing the algorithm.
+
+  $\cdot$  Hvordan suffix træet kan bruges til at finde tandem repeats ved at teste på om j = index + (path depth af internal node) er et leaf under den givne node.
+
+  $\cdot$  Hvordan smaller half trick får algoritmen til at opnå O(n log n) tid.
+\item Problems encountered, if any.
+
+  $\cdot$ Kun lidt kode bugs: $\pm 1$ på nogle index og manglede et \texttt{else} statement et sted i koden som jeg brugte  alt for lang tid på at finde.
+\item An experiment which verifies that your implementation uses no more than time O(n log n) for finding/counting all occurrences of branching tandem repeats.
+
+Vi er kommet frem til at worst case for ``smallest half'' algoritme-tricket helst ikke skal være en streng der danner et træ hvor algoritmen ikke kan udelukke et stort undertræ, fx ene forskellige symboler, dog vil det resultere i at der ``kun'' bliver n nodes (leaf). Dermed må det værste case være et i stil med et binært træ som er fuldstændigt balanceret. Vi har dog ikke fået skrevet et program til dette, men har til gengæld skrevet et script, der generere en tilfældig streng over alfabetet ``a-zA-Z0-9'' med en varierende længde fra $[1 \dots 4^{10}]$ med et interval af $2^x$. Scriptet kører programmet \texttt{/tandem} 5 gange og tager en gennemsnits tid, og plotter dette på en graf delt med størelsen af den givne streng. 
+
+\includegraphics[scale=0.7]{../experiment/finallogtime.png}
+
+Vi har forsøgt med en streng bestående af ens symboler, hvilket lader til at blive kvadratisk i O-tid. Vi har prøvet at debugge dette og kan konkludere at koden ikke sidder fast i nogle størrer loops, hvormed den aldrig går ned i et stort undertræ. I stedet kommer den til at bruge en masse tid på non-brancing strenge, hvor den i dybden D, finder d non-brancing. Så i alt finder den d+d-1+d-2+..+2+1=O(n) og burde stadig opnå O(n log n). Dette tager meget lang tid så kunne ikke få genereret en graf der viser det.
+
+\end{enumerate}
+\end{document}

@@ -17,3 +17,14 @@ plot "../GridAccuracyFollowBlack3cm.txt" using 1:2 w l title ""
 
 set output "GridAccuracyFollowBlack3cmTCross.png"
 plot "../GridAccuracyFollowBlack3cmTCross.txt" using 1:2 w l title ""
+
+set output "GridAccuracy3cm_color.png"
+plot "../GridAccuracy3cm.txt" every ::0::110 using 1:2 w l title "" lc rgb 'green',\
+ "../GridAccuracy3cm.txt" every ::110::130 using 1:2 w l title "" lc rgb 'black', \
+ "../GridAccuracy3cm.txt" every ::130::390 using 1:2 w l title "" lc rgb 'gray', \
+ "../GridAccuracy3cm.txt" every ::390::410 using 1:2 w l title "" lc rgb 'black', \
+ "../GridAccuracy3cm.txt" every ::410::670 using 1:2 w l title "" lc rgb 'gray', \
+ "../GridAccuracy3cm.txt" every ::670::700 using 1:2 w l title "" lc rgb 'black', \
+ "../GridAccuracy3cm.txt" every ::700::800 using 1:2 w l title "" lc rgb '#696969', \
+
+
