@@ -9,6 +9,14 @@ plot "../GridAccuracy3cm.txt" using 1:2 w l title ""
 set output "GridAccuracyTilt.png"
 plot "../GridAccuracyTilt.txt" using 1:2 w l title ""
 
+set output "GridAccuracyTilt_color.png"
+plot "../GridAccuracyTilt.txt" every ::0::190 using 1:2 w l title "" lc rgb 'green',\
+ "../GridAccuracyTilt.txt" every ::190::211 using 1:2 w l title "" lc rgb 'black', \
+ "../GridAccuracyTilt.txt" every ::211::480 using 1:2 w l title "" lc rgb 'gray', \
+ "../GridAccuracyTilt.txt" every ::480::517 using 1:2 w l title "" lc rgb 'black', \
+ "../GridAccuracyTilt.txt" every ::517::770 using 1:2 w l title "" lc rgb 'gray', \
+ "../GridAccuracyTilt.txt" every ::770::800 using 1:2 w l title "" lc rgb 'black'
+
 set output "GridAccuracyFollowBlackTilt.png"
 plot "../GridAccuracyFollowBlackTilt.txt" using 1:2 w l title ""
 
@@ -25,6 +33,6 @@ plot "../GridAccuracy3cm.txt" every ::0::110 using 1:2 w l title "" lc rgb 'gree
  "../GridAccuracy3cm.txt" every ::390::410 using 1:2 w l title "" lc rgb 'black', \
  "../GridAccuracy3cm.txt" every ::410::670 using 1:2 w l title "" lc rgb 'gray', \
  "../GridAccuracy3cm.txt" every ::670::700 using 1:2 w l title "" lc rgb 'black', \
- "../GridAccuracy3cm.txt" every ::700::800 using 1:2 w l title "" lc rgb '#696969', \
+ "../GridAccuracy3cm.txt" every ::700::800 using 1:2 w l title "" lc rgb '#696969'
 
 
