@@ -1,0 +1,68 @@
+\textbf{Date:} June 17th 2014\\\textbf{Duration:}
+9:30-22:15\\\textbf{Group members:} Henrik
+
+\subsection{Goals}
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Work out a new way of calibrating the sensors
+\item
+  Work on the code and make it more dynamic
+\item
+  Write code to make the robot do correct actions for an entire row of
+  solar panels
+\end{itemize}
+
+\subsection{Calibration}
+
+Yesterday we had some problems with the calibration; we have only been
+calibrating in two directions so far (East and west with regards to our
+previously defined cardinal directions), so when the robot had to follow
+a line very accurately in order to hit a solar panel correctly, the
+calibrated offset value was obtained from an angle that wasn't entirely
+correct, which means the robot drove in a wrong distance from the line.
+
+Today we have changed the robot to calibrate in all 4 cardinal
+directions in the hope that this will improve results. When we tested
+it, it turned out it did indeed improve results, but later on in the day
+we discovered that even just a small cloud blocking the natural lighting
+affected our robot drastically. We have not been able to find a solution
+to this problem unless we find a room that only has artifical lighting.
+
+\subsection{The code}
+
+The code is nearing completiong, although there is still missing an
+overall structure that implements an overall strategi for the behaviour
+of the robot. We have started on this and decided that our first
+strategy shall work as follows:
+\\\textbf{1.} Drive to a row of solar
+panels.
+\\\textbf{2.} Pass over the row and note whether the solar panels
+are active or inactive; if they are broken, they will be replaced
+immediately. This means the robot will pick it up immediately, turn
+around and drive back to the warehouse, fetch a new solar panel, drive
+back to the row, find the correct spot, place the solar cell and mark it
+as active in memory and then continue passing over the row.
+\\\textbf{3.}
+When the state of all three solar panels have been noted, the strategy
+continues as below: - If solar panel 3 is inactive, it will be rotated,
+such that the robot is facing south, which makes it easy for the robot
+to drive to spot \#1 or \#2 and pick up a solar panel there. If solar
+panel 1 is inactive, the robot will drive to this one and rotate is, so
+that the robot is once again facing north, ready to rotate solar panel 2
+if needed. - If solar panel 3 is not inactive, the robot will drive
+backwards to solar panel 2. If this one is inactive, it will be rotated
+and the robot will be facing south, ready to turn solar panel 1 if
+needed. If this is not needed, the robot drives backwards out of the row
+using tacho count.
+
+The general idea is to try and minimize the number of times the robot
+has to drive backwards after rotating a solar panel, which is what is
+hardest for the robot at the moment.
+\\\textbf{4.} When a row is completed (All solar panels are active), the
+robot drives to the next row and the process is repeated.
+
+We have also made the code that makes it possible for the robot to
+replace one broken solar panel and return to the right spot afterwards;
+there are still a few bugs here, but it almost works.

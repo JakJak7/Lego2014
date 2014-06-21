@@ -1,0 +1,43 @@
+\subsection{Conclusion}
+
+In the end, we think our project was quite successful. We initially
+feared that we would not be able to get anywhere near the 2 minute time
+limit that the official WRO competition has, but we actually have a run
+with a legal set up of solar panels that only takes 2 minutes and 19
+seconds to complete, so we actually made it quite close.
+
+During the project, we have had a lot of issues with the lighting
+conditions in the rooms we were running our robot in. This is in part
+due to our choice to try and limit the number of sensor we used; our
+final robot ended up using only 2 sensors - 1 color sensor for detecting
+the color of the solar panels and 1 light sensor to follow the lines on
+the track. It was also partly caused by the large distance our light
+sensor had to the ground, but achieving this large distance and still
+being able to follow the lines is also something we are quite proud of.
+
+\subsection{Future work}
+
+The robot is able to complete the track for full points if there is only
+one broken solar panel (Aside from the time limit). If there are
+multiple broken solar panels, we are unable to handle more than the
+first one of them. If we had more time, this is one of the first issues
+we would be looking at.
+
+We also got some other ideas late in the project for optimizing the runs
+for the robot. One of these is based on the fact that an official WRO
+setup will have 4-6 solar panels that are incorrectly configured. This
+is decided before the run is started. As such, we could implement a
+counter that increments every time we have reconfigured a solar panel
+and once this counter matches the number of solar panels that needs to
+be configured, we could simply return to home. In an ideal case, this
+would allow us to save precious seconds by not having to check the third
+row at all.
+
+Another thing we did not have the time to implement was error handling.
+If the robot malfunctions for any reason, it will continue to execute
+the entire program instead of stopping. However, as the rules state that
+the team is simply allowed to call ``Stop'' to stop the attempt and
+begin scoring, handling errors by terminating the program is not
+necessarily. Some form of error correction code could have been nice to
+have the time to implement however. This could for example involve the 2
+sensor ports that we still have open.

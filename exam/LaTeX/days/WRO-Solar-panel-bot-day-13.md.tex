@@ -1,0 +1,78 @@
+\textbf{Date:} June 16th 2014\\\textbf{Duration:} 14-19\\\textbf{Group
+members:} Henrik
+
+\subsection{Recap \& Goals}
+
+It has been a week since we last worked on the project due to exams. So
+far we have made the robot find its way to grid \#1 and turn all solar
+panels on this grid. We have also made the robot find its way to grid
+\#1, spot \#2, carry a broken solar panel back to the warehouse from
+this position and return with a working solar panel. (Grid \#1 is the
+east-most line of solar panels according to our earlier cardinal
+directions definition)
+
+Today the plan is to see if things still work and then continue
+refactoring the code, such that the aforementioned functions (Turning
+and replacing solar cells) continue to work while changing the code from
+being hard coded to being more dynamic, so that the robot will do the
+right things no matter how the track has been set up with regards to
+solar panels.
+
+\subsubsection{Do things still work?}
+
+We have run our old program, and aside from a few bugs due to the
+lighting, it worked out. We may need to find a better way to measure the
+light, but that might mean a lot of analysis on different data, which we
+might not be able to do in time unless we have an additional month.
+
+\subsection{Refactoring}
+
+The code has been split into more functinos and classes, so that we can
+more easily call the different commands (Turn robot, move robot, turn
+solar panel, etc.). We started out by building a program with this new
+data structure to see if things were still working; the program drove
+out to grid \#1, spot \#1 and turned the first solar panel. It worked
+just as well as it did with the old code.
+
+We then decided to try out a theory which we have been considering for
+the past week. The theory was to use a light sensor on the backside of
+the robot to find the spot that the robot's rotation would revolve
+around. As the light sensor is the positioned on the middle of the axle
+between the two motors that rotate the robot, the robot will, when the
+backside light sensor is above an intersection, after rotating be
+positioned so it is correctly aligned immediately. As alignment has been
+a big problem earlier, this would be a very nice improvement. We
+switched out the P-controller with a new function for terminating the
+movement of the robot; this new function terminates the movement when
+the backside sensor hits an intersection, at which point we start
+rotating. There were a few problems in the initial runs as, after
+rotating, the backside sensor would still be positioned in the middle of
+a line, causing the robot movement to terminate again. After a lot of
+tests and attempts at getting the backside sensor to not make the robot
+terminate again, we dropped the idea again as we could not get it to
+function correctly.
+
+We then wanted to get the robot to run faster by doing faster turns and
+driving faster on the long straight lines. This gave us some problems as
+our turn method is based on a tacho counter; as we increased the speed
+from 40 to 70 (Out of a scale of 0 to 100), the robot turned about 30
+degrees too much. However, at the straight lines, it worked fine, so we
+are still able to lower the total run time of the robot by increasing
+the speed at these areas and then lowering it again for the turns and
+solar panel rotations.
+
+We should be able to implement a new method for turning the solar panel
+which can turn it faster, but it will only be in connecting with
+refactoring the code once the first program for completing the track has
+been finished.
+
+\subsection{Conclusion}
+
+Today we have refactored the code, so that it will be easier to continue
+working with, tested (and rejected) a new way of turning the robot
+(Using a backside sensor), tested code for approaching a solar panel and
+rotating it as well as made attempts at improving the speed of the
+robot, which worked in some places.
+
+No major changes in the way the robot looks or works, so no pictures or
+videos for today.

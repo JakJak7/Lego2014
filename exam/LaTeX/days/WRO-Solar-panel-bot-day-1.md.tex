@@ -1,0 +1,212 @@
+\textbf{Date:} May 19th 2014\\\textbf{Duration:} 9-16\\\textbf{Group
+members:} Henrik, Jakob, Jesper
+
+\subsection{Goals for today}
+
+First thing we will do is work out a threat analysis for the World Robot
+Olympiad 2014 challenge.
+
+\subsection{Threat analysis}
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Positioning, how will the system know where it is
+\item
+  Strategy for turning solar panels
+\item
+  Strategy for replacing solar panels
+\item
+  The system must be able to pass solar panels without moving them
+\item
+  How will we pick up a solar panel to move it around
+\item
+  More importantly, how will we transport a solar panel back between the
+  correctly positioned ones without touching them?
+\item
+  Keeping track of points on the robot
+\item
+  Error handling, what will the robot do if it loses track of its
+  position? Important to not keep going and possibly lose points
+\item
+  Detecting state of a solar panel; the color sensor returns black if
+  nothing is seen, how will we distinguish black from nothing?
+\item
+  Motor limitation, we can only have three motors
+\item
+  Handling, can the robot turn around without issue?
+\end{itemize}
+
+In the official challenge, there is a bridge on the track. This is not
+present on our test track, and so we will disregard it in our project.
+
+\subsection{Navigation}
+
+\subsubsection{Goal}
+
+Our main focus today is to come up with a strategy for how to navigate
+the track.
+
+\subsubsection{Plan}
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Brainstorm ideas for how to navigate the track.
+\item
+  Discuss suggestions with their pros and cons.
+\item
+  Decide on a method to use in our final solution.
+\end{itemize}
+
+\subsubsection{Possible solutions}
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Tacho counter (Cartesian coordinate mapping).
+\item
+  GPS + compass.
+\item
+  Line follower.
+\end{itemize}
+
+\subsubsection{GPS}
+
+We could use an ordinary GPS sensor to find the system's position and a
+compass sensor to find its orientation. This is a very robust solution,
+as the system can, at any time it becomes disoriented, just stop and
+read its exact position, and it is independent of lines to follow, tacho
+counter etc. It is possible to get an accuracy of about 2 cm using L1
+GPS {[}1{]}.\\This accurate GPS module takes 12 and a half minute to
+find the position, and as we have a strict 2 minute time limit, using
+this method for navigation is infeasible. Alternatively we could use
+conventional GPS modules, but these are only accurate down to 3 meters,
+and as that is about the size of the track we are driving on, it will
+not do us any good. In addition to this, the compass sensor will be
+useless if there is any electromagnetic interference nearby. Also, the
+track is inside a building, which heavily limits the effectiveness of a
+GPS module.
+
+\subsubsection{Tacho counter}
+
+We could use the tacho counter to keep track of how far we have moved
+and use this knowledge to keep track of our position in a Cartesian
+coordinate system. We can also find our orientation from the tacho
+counter. The motors are slightly inaccurate however, and after driving
+around for long enough, our position will start to become inaccurate
+{[}2{]}. And there is no way to correct this inaccuracy, so this
+solution is not very error resilient.
+
+\subsubsection{Line following}
+
+The whole track has black lines that we can follow using a light sensor,
+and we can find our position using certain points and crossings on the
+track.\\Issues we might run into using this method is calibrating the
+light sensor to properly recognize black, white, green and gray, as we
+will not know the exact lighting conditions at all times. Another issue
+is positioning the light sensor, as we usually position right about
+where the solar panels will be on the track, and we cannot move these or
+we will have points deducted.
+
+\subsubsection{Conclusion}
+
+Out of these three proposals, line following is the only one that
+appears feasible, and so we decide to continue with this approach.
+
+\subsection{Positioning light sensor}
+
+We have a couple of different ways to place the light sensors. - We can
+place it near the surface of the track at an angle, so the light sensor
+can be far enough to the side to avoid hitting the solar panels. - We
+can have the light sensor point directly down, but placed in a height
+that allows a solar panel to pass underneath.
+
+We will do some measurements to see which solution is better at
+distinguishing black and white. To do these measurements, we have
+written a program to save readings for easier comparison.
+
+\subsubsection{Results}
+
+First result for each color is with the red light on, second is without
+
+  \begin{longtable}[c]{@{}lcrrr@{}}
+    \hline\noalign{\medskip} Color & 3 cm - normalized & 3 cm - raw &
+    tilt - normalized & tilt - raw \\\noalign{\medskip}
+    \hline\noalign{\medskip} Green & 44 & 459 & 50 & 517
+    \\\noalign{\medskip} Green & 44 & 458 & 50 & 515
+    \\\noalign{\medskip} Black & 47 & 488 & 53 & 544
+    \\\noalign{\medskip} Black & 47 & 483 & 53 & 548
+    \\\noalign{\medskip} White & 53 & 544 & 56 & 583
+    \\\noalign{\medskip} White & 52 & 541 & 56 & 581
+    \\\noalign{\medskip} Grey & 48 & 495 & 51 & 523
+    \\\noalign{\medskip} Grey & 47 & 486 & 50 & 514
+    \\\noalign{\medskip} \hline
+  \caption{Results for each color in the map (with light sensor)}
+  \end{longtable}
+
+\subsubsection{Conclusion}
+
+As seen from the values, both approaches are viable solutions. From the
+datalogger output, we see that the tilted approach yields more accurate
+results, but we are worried that the sensor might bump into the panels.
+The lifted approach is also simpler to construct, and so we decided to
+go with that.
+
+\subsection{Color sensor, checking current state of a solar panel}
+
+\subsubsection{Goal}
+
+Get the system to distinguish between a solar panel in the correct
+position, wrong position, a defect solar panel, or no solar panel at
+all.
+
+\subsubsection{Plan}
+
+The way we are going to test if the system can distinguish between the
+states of the solar panels is by holding the color sensor in the
+position we expect it to be in in the final design and reading values on
+different solar panels.\\And to clarify, we expect the color sensor to
+be placed underneath the robot, a bit off to one side. This will allow a
+solar panel to pass by without bumping into the sensor and thus
+subtracting points from the final score.
+
+\subsubsection{Results}
+
+We see that by placing the color sensor as described above and reading
+values for the four different states, we can easily distinguish between
+the states. Thus, this is a good way to position the color sensor, and
+it will allow us to distinguish between states.
+
+\begin{longtable}[c]{@{}lcrr@{}}
+  \hline\noalign{\medskip} State (color) & Red & Green & Blue
+  \\\noalign{\medskip} \hline\noalign{\medskip} Working (blue) & 527
+  & 536 & 576 \\\noalign{\medskip} Turned (red) & 647 & 581 & 583
+  \\\noalign{\medskip} Broken (black) & 522 & 515 & 518
+  \\\noalign{\medskip} Empty (none) & 742 & 741 & 741
+  \\\noalign{\medskip} \hline
+\caption{Results for solar pannels different state}
+\end{longtable}
+
+\subsection{Conclusion}
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  We decided on a way to navigate the track.
+\item
+  We found a good way to position the light sensor so that the vehicle
+  can follow a line.
+\item
+  We found a good way to position the color sensor so that we can
+  distinguish between working, defect, missing and turned solar panels.
+\end{itemize}
+
+\subsection{References}
+
+{[}1{]} J. A. Farrell, T. D. Givargis, and M. J. Barth, ``Real-Time
+Differential Carrier Phase GPS-Aided INS,'' in '' IEEE Trans. Contr.
+Syst. Technol., vol.~8, no. 4 pp.~709--721, July 2000. 1991. CA, Jan.
+1998, pp.~345--354.
+
+{[}2{]} Lesson 9 lab report

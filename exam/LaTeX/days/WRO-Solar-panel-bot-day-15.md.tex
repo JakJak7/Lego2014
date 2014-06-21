@@ -1,0 +1,55 @@
+\textbf{Date:} June 18th 2014\\\textbf{Duration:}
+9:30-13:15\\\textbf{Group members:} Henrik
+
+\subsection{Goals}
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Calibration
+\item
+  Make everything work together, i.e.~make the strategy for driving
+  around the track, the strategy for making the robot turn solar panels
+  and the strategy for exchanging broken solar panels work together.
+\end{itemize}
+
+\subsection{Calibration}
+
+As the robot is very sensitive to the lighting conditions of the room,
+we have to change the calibration method again as we cannot otherwise
+guarantee that the robot can finish a complete tour if the lighting
+conditions change (The sun appears, people are casting shadows over the
+table, a cloud blocks out the sun, etc.). The first plan is to mount a
+light sensor on the top of the robot pointing upwards, which will only
+be used to measure the ambient light, both while calibrating but also
+dynamically adjusting the values we use for the other sensor on the run.
+
+We have noticed when the sun is brighter, there are also darker shadows,
+so the robot is more affected in some directions than others by this. In
+order to solve this problem, we either have to shield the robot from the
+sun completely or make a function that correlates the darkness of the
+shadows in the room with the amount of light in the room.
+
+\subsection{Results}
+
+After having implemented this and made a few test runs where the light
+has suddenly fluctuated, it seems it is a reasonable way to fix the
+problem; there are still a few big deviations from the line, but this
+seems to be because the sensors measure the light differently (Either
+because of differences internally in the sensor or because of the
+location of the sensors).
+
+\subsubsection{Strategy}
+
+As we explained yester, the strategy for driving is first to drive to a
+row, fix the row as explained yesterday and then drive to the next row,
+etc.
+
+As we started implementing this and testing it, we discovered that the
+function to replace broken solar cells still have some issues, so we are
+focusing on the inactive solar cells only for now. There were quite a
+few issues with the robot when it had to turn the solar panels. We
+tweaked the parameters back and forth, but nothing helped. Finally, the
+battery ran dry, and when we replaced it with a new one, the robot
+functioned without major issues when driving through the grid with all
+solar panels already active.
