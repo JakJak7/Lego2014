@@ -10,39 +10,39 @@ point.
 \begin{figure}[hbt]
   \centering
   \includegraphics[scale=0.13]{../experiments/images/cleaning.jpg}
-  \caption{Picture of the track, on the right side it has been cleaned, and og the left it has not.}
+  \caption{Picture of the track, on the right side it has been cleaned, on the left it has not.}
 \end{figure}
 We now have the vehicle display the RGB and light values, so that we can
-read them and hard code them. This way, the vehicle won't have to
-shuffle around at the beginning in order to get readings, and we'll save
+read them and hard code them. This way, the vehicle does not have to
+shuffle around at the beginning in order to get readings, and we will save
 some time on the full run.
 
 We saw another group made a paper armor for the vehicle, shielding from
 light. This is to avoid any changes in the ambient light, and we decided
-to try this approach on our own.\\This didn't help, and actually made
-our vehicle run worse, so we got rid of it.
+to try this approach on our own.\\This did not help our robot, it actually made
+our vehicle run worse, so we decided to abandon this idea again.
 
 Next up we tried moving the entire track to another location with more
 stable lighting conditions. Here we had the option to turn the lights on
-or off. Turning the lights off didn't help, because the color sensor
+or off. Turning the lights off did not help, because the color sensor
 registered the floodlight from our light sensor as the color red, and
-turning off the floodlight isn't an option in the dark.\\With the lights
+turning off the floodlight is not an option in the dark.\\With the lights
 on we achieved much better results.\\Now we can get the vehicle to turn
-all panels, and replace the broken ones. As the vehicle was running low
+all panels and replace the broken ones. As the vehicle was running low
 on battery, we switched to a fresh battery, and now it would no longer
 turn nor back up correctly. Battery charge is something we have to keep
-in mind, now that we've fixed the lighting conditions.\\Another thing
-we've yet to implement, is have the vehicle pick up replacement panels
-from the three slots in storage. So far we've been taking them all from
-the first slot, and inserted a new one when necessary. This is illegal
-in the final competition, so we'll have to make our vehicle obey the
+in mind now that we have fixed the lighting conditions.\\Another thing
+we have yet to implement is to have the vehicle pick up replacement panels
+from the three slots in storage. So far we have been taking them all from
+the first slot, and inserted a new one when necessary. Touching the track or robot after the run has started is illegal
+in the final competition, so we will have to make our vehicle obey the
 rules.
 
 \subsection{Conclusion}
 
 We have moved the whole track to a room with fixed lighting conditions,
-and thus (hopefully) eliminated the calibration issues we have been
+and thus hopefully eliminated the calibration issues we have been
 troubled with for a while. Currently our vehicle runs great here. Next
-up we'll get our vehicle to be able to pick up fresh solar panels from
+up we will get our vehicle to be able to pick up fresh solar panels from
 storage, that is if we can make it in time, as tomorrow is the day of
 the presentation.
