@@ -28,41 +28,53 @@ directions in the hope that this will improve results. When we tested
 it, it turned out it did indeed improve results, but later on in the day
 we discovered that even just a small cloud blocking the natural lighting
 affected our robot drastically. We have not been able to find a solution
-to this problem unless we find a room that only has artifical lighting.
+to this problem unless we find a room that only has artificial lighting.
 
 \subsection{The code}
 
-The code is nearing completiong, although there is still missing an
-overall structure that implements an overall strategi for the behaviour
+The code is nearing completion, although there is still missing an
+overall structure that implements an overall strategy for the behaviour
 of the robot. We have started on this and decided that our first
 strategy shall work as follows:
-\\\textbf{1.} Drive to a row of solar
+\begin{enumerate}
+\item Drive to a row of solar
 panels.
-\\\textbf{2.} Pass over the row and note whether the solar panels
+\item Pass over the row and note whether the solar panels
 are active or inactive; if they are broken, they will be replaced
 immediately. This means the robot will pick it up immediately, turn
 around and drive back to the warehouse, fetch a new solar panel, drive
 back to the row, find the correct spot, place the solar cell and mark it
 as active in memory and then continue passing over the row.
-\\\textbf{3.}
+\item
 When the state of all three solar panels have been noted, the strategy
-continues as below: - If solar panel 3 is inactive, it will be rotated,
+continues as below:
+\begin{itemize} 
+\item If solar panel 3 is inactive, it will be rotated,
 such that the robot is facing south, which makes it easy for the robot
-to drive to spot \#1 or \#2 and pick up a solar panel there. If solar
-panel 1 is inactive, the robot will drive to this one and rotate is, so
+to drive to spot \#1 or \#2 and pick up a solar panel there.
+\begin{itemize} 
+\item If solar
+panel 1 is inactive, the robot will drive to this one and rotate it, so
 that the robot is once again facing north, ready to rotate solar panel 2
-if needed. - If solar panel 3 is not inactive, the robot will drive
-backwards to solar panel 2. If this one is inactive, it will be rotated
-and the robot will be facing south, ready to turn solar panel 1 if
-needed. If this is not needed, the robot drives backwards out of the row
+if needed. If this is not needed, the robot drives backwards out of the row
 using tacho count.
-
+\item If solar panel 1 is not inactive, the robot will drive to solar panel 2 and rotate it, after which it will drive backwards out of the row using tacho count.
+\end{itemize}
+\item If solar panel 3 is not inactive, the robot will drive
+backwards to solar panel 2.
+\begin{itemize} 
+\item If this one is inactive, it will be rotated
+and the robot will be facing south, ready to turn solar panel 1 if
+needed. If this is not needed, it simply drives out of the row. 
+\item If solar panel 2 was not inactive, the robot drives backwards to solar panel 1 and rotates it if needed. Otherwise, it simply drives backwards out of the row using tacho count.
+\end{itemize}
+\end{itemize}
 The general idea is to try and minimize the number of times the robot
 has to drive backwards after rotating a solar panel, which is what is
 hardest for the robot at the moment.
-\\\textbf{4.} When a row is completed (All solar panels are active), the
+\item When a row is completed (All solar panels are active), the
 robot drives to the next row and the process is repeated.
-
+\end{enumerate}
 We have also made the code that makes it possible for the robot to
 replace one broken solar panel and return to the right spot afterwards;
 there are still a few bugs here, but it almost works.
