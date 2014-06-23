@@ -7,6 +7,13 @@
 \usepackage{longtable}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
 \definecolor{name}{rgb}{0.5,0.5,0.5}
 \definecolor{javared}{rgb}{0.6,0,0} % for strings
 \definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
@@ -36,13 +43,17 @@ showstringspaces=false}
 
 \begin{document}
 \maketitle
+\thispagestyle{empty}
+\afterpage{\blankpage}
 \newpage
 Our code can be found on GitHub\\
 \url{https://github.com/JakJak7/Lego2014/tree/master/exam/code}
 \newpage
-\setcounter{tocdepth}{3}
+\setcounter{tocdepth}{2}
 \tableofcontents
-\clearpage
+\afterpage{\blankpage}
+\newpage
+
 \section{WRO day 1}
 \input{days/WRO-Solar-panel-bot-day-1.md.tex}
 \clearpage

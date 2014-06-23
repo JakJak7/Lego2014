@@ -21,16 +21,17 @@ sensor when a red, blue or black solar panel was present (or none at
 all). We made these measurements multiple times under different lighting
 conditions. Based on this, we have found a way to discover the different
 states the solar panels may be in.
-\begin{figure}[hbt]
+
+\begin{figure}[h]
   \centering
-  \includegraphics[scale=0.35]{../experiments/2prototype/results/gnuplot/Colormesrun1.png}
-  \includegraphics[scale=0.35]{../experiments/2prototype/results/gnuplot/Colormesrun2.png}
-  \includegraphics[scale=0.35]{../experiments/2prototype/results/gnuplot/Colormesrun3.png}
+  \includegraphics[scale=0.342]{../experiments/2prototype/results/gnuplot/Colormesrun1.png}
+  \includegraphics[scale=0.342]{../experiments/2prototype/results/gnuplot/Colormesrun2.png}
+  \includegraphics[scale=0.34]{../experiments/2prototype/results/gnuplot/Colormesrun3.png}
   \caption{Three color mesurements when the robot drives over 8 solarpannels in a
 straight line (none,blue,red,black,blue,red,black,blue,red,none)}
 \end{figure}
-\subsubsection{First idea for discovering solar panels}
 
+\subsubsection{First idea for discovering solar panels}
 On every graph, it is clear that all the RGB-values are high when no
 solar panel is present, but when a panel is present, the values change.
 When a solar panel is present, we see on our measurements that the green
@@ -41,7 +42,7 @@ difference is large enough to determine whether a solar panel is
 present.
 
 
-\begin{longtable}[chtp]{|l|c|c|c|l|c|c|}
+\begin{longtable}[c]{|l|c|c|c|l|c|c|}
 \hline
 Detection color & 
 \multicolumn{3}{c|}{Mesured values for the three runs} &

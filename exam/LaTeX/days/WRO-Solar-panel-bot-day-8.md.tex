@@ -19,21 +19,27 @@ Do measurements of light values when reaching 4-way intersections and T-intersec
 
 The way we measured the light values when crossing T intersections is by
 enabling the datalogger, and letting the robot follow a line to a T-intersection.
-\begin{figure}[hbt]
+
+\begin{figure}[h]
   \centering
   \includegraphics[scale=0.5]{../experiments/2prototype/results/gnuplot/retningsbaseret_3vejs.png}
   \caption{Light values for three different directions when the robot follows a line and see a T-intersection.}
 \end{figure}
+
 As
 seen in the graph, the offsets are quite different, but the change in
 values is very consistent, about 25 units. The "Syd" graph increases after
-the intersection, because it entered a white area.\\We tested the same
-way for 4-way intersections,
+the intersection, because it entered a white area.
+
+We tested the same
+way for 4-way intersections.
+
 \begin{figure}[hbt]
   \centering
   \includegraphics[scale=0.5]{../experiments/2prototype/results/gnuplot/retningsbaseret_4vejs.png}
   \caption{Light values for all four cardinal directions when the robot follows a line and sees a 4-way intersection. South is measured twice due to non-uniform lighting at the track.}
 \end{figure}
+
 Again
 we see a quite consistent change of values, about 50 units. These tests
 show that it is feasible to tell apart T-intersections and 4-way
@@ -41,24 +47,31 @@ intersections, although the values are relative to the direction the
 vehicle is pointing.
 
 We realized we have not tried driving backwards with the vehicle, so we
-tested that.\\\url{http://youtu.be/DYHlgq6TYgY}\\As seen in the video,
+tested that.
+\url{http://youtu.be/DYHlgq6TYgY}
+
+As seen in the video,
 it is not possible to drive backwards using the P controller, as the
 light sensor is still on the line even though the robot is getting way
 off track.
 
 Turns out we need another light sensor in the back if we want to be able
-to drive backwards, and so we will attempt one.\\After spending some time
+to drive backwards, and so we will attempt one.
+After spending some time
 naming variables for light values in a non-confusing manner, we have the second light sensor
 installed. The program starts out by calibrating the light sensors, by
 driving out into the white area, reading values, turning around, reading
 values from another direction, and finally the vehicle starts following
-the line towards the solar panels.\\We are now working on getting the
+the line towards the solar panels.
+We are now working on getting the
 vehicle to follow the track through each line and turn, and once we have
 that running, we can use the solar panel manipulation mechanism we
-developed last time to finally earn some points.\\We are able to make the
+developed last time to finally earn some points.
+We are able to make the
 first turn, but we have issues getting the second turn to work. The
 light sensor cannot reliably detect the T-intersection, and so it keeps going.
-The lighting in the room appears to be the cause of this trouble.\\After
+The lighting in the room appears to be the cause of this trouble.
+After
 hours of fiddling around with parameters, we found a bug in the code,
 and now the vehicle also makes the second turn. We are now well on our
 way to the solar panels, so we can finally get some manipulation done!
@@ -73,6 +86,7 @@ static lighting conditions, and this is not a feasible solution in
 practice. Therefore, we are rewriting it to dynamically calculate the
 color thresholds on
 runtime.
+
 \begin{figure}[hbt]
   \centering
   \includegraphics[scale=0.5]{../experiments/2prototype/results/gnuplot/Colormesrun1.png}

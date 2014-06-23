@@ -100,14 +100,19 @@ We decided that the best solution will be to lift up the solar panels.
 It will solve all of the requirements, and if we can implement it
 properly, we will have a good shot at completing the objective. However,
 the precision required is worrying, so first off we will attempt to
-make a precise line follower.\\We need it to able to hit within 2 mm of
+make a precise line follower.
+
+We need it to able to hit within 2 mm of
 the gap. We wrote a basic line follower to test, but we immediately ran
-into issues with recognizing different colors.\\
-\begin{figure}[hpt]
+into issues with recognizing different colors.
+
+\begin{figure}[h]
   \centering
-  \includegraphics[scale=0.5]{../experiments/1prototype/results/gnuplot/GridAccuracy3cm_color.png}
+  \includegraphics[scale=0.43]{../experiments/1prototype/results/gnuplot/GridAccuracy3cm_color.png}
   \caption{Light reading for a simple run from the base to the garage in a straight line (with the light sensor 3 cm above the track).}
 \end{figure}
+
+
 We tested the light sensor's ability to distinguish colors by letting it
 start in the green starting zone, drive out across the white area,
 cross a single black line, more white, and finally into the gray
