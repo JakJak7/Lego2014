@@ -10,7 +10,18 @@ counter. This will be quick to implement, and if it's able to stay on
 track, we will have saved a lot of time.\\And so, our goal for today is
 to explore the possibility of using a tacho counter, whilst trying to
 improve the line follower.
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[scale=0.1]{../experiments/images/maths.jpg}
+\caption{Top: first approach to turning. Middle: rotating on the spot, better approach}
+\end{figure}
 
+Number of degrees required to move x centimeters forward:
+$$\#degrees = 360\frac{distanceInCm}{wheelCircumference} = \frac{360\cdot distanceInCm}{wheelDiameter \cdot \pi}$$
+Number of degrees wheel turning required to rotate the vehiccle 90 degrees:
+$$\#degrees = 360 \cdot \frac{vehicleWidth\cdot 2\cdot \pi/4}{wheelDiameter \cdot \pi}$$
+\\
+\\
 \begin{lstlisting}[language=java]
   public static void forward(float distance){ 
     int degrees = (int)(360*distance / (wheelSize * Math.PI));
