@@ -6,7 +6,7 @@ if [ $? -eq 1 ]; then
     echo >&2 "git not installed, do you want to install it?"
     sudo apt-get install git
 fi
-hash git &> /dev/null
+hash pandoc &> /dev/null
 if [ $? -eq 1 ]; then
     echo >&2 "pandoc not installed, do you want to install it?"
     sudo apt-get install pandoc
